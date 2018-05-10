@@ -7,7 +7,7 @@ import org.walkerljl.toolkit.db.api.annotation.Table;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 @Table("retry_job")
 public class RetryJobDO extends BaseDO {

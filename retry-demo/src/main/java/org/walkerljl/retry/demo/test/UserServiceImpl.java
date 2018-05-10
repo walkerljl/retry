@@ -5,7 +5,7 @@ import org.walkerljl.toolkit.logging.LoggerFactory;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class UserServiceImpl implements UserService {
 

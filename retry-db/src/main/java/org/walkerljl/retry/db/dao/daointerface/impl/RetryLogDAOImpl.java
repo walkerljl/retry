@@ -5,7 +5,7 @@ import org.walkerljl.retry.db.dao.dataobject.RetryLogDO;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class RetryLogDAOImpl extends BaseDAOImpl<RetryLogDO, Long> implements RetryLogDAO {
 

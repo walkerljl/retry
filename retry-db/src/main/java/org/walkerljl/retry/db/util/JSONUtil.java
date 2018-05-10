@@ -7,7 +7,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class JSONUtil {
     /**

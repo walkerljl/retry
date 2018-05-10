@@ -15,7 +15,7 @@ import org.walkerljl.configuration.client.impl.readonly.PropertiesConfiguratorPr
 import org.walkerljl.retry.RemoteRetryJobQueue;
 import org.walkerljl.retry.RetryJobFetcher;
 import org.walkerljl.retry.RetryService;
-import org.walkerljl.retry.RetryWaiter;
+import org.walkerljl.retry.RetryBroker;
 import org.walkerljl.retry.db.dao.daointerface.RetryJobDAO;
 import org.walkerljl.retry.db.dao.daointerface.RetryLogDAO;
 import org.walkerljl.retry.db.dao.daointerface.RetryParamDAO;
@@ -24,7 +24,7 @@ import org.walkerljl.retry.db.dao.daointerface.impl.RetryJobDAOImpl;
 import org.walkerljl.retry.db.dao.daointerface.impl.RetryLogDAOImpl;
 import org.walkerljl.retry.db.dao.daointerface.impl.RetryParamDAOImpl;
 import org.walkerljl.retry.demo.impl.defaults.DefaultRetryService;
-import org.walkerljl.retry.demo.impl.defaults.DefaultRetryWaiter;
+import org.walkerljl.retry.demo.impl.defaults.DefaultRetryBroker;
 import org.walkerljl.retry.demo.test.CreateUserRetryHandler;
 import org.walkerljl.retry.exception.machine.CannotStartMachineException;
 import org.walkerljl.retry.exception.machine.CannotStopMachineException;
@@ -53,19 +53,19 @@ import org.walkerljl.toolkit.db.orm.session.Configuration;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class RetryServer extends AbstractMachine implements Machine {
 
-    private Logger                  logger;
-    private RetryConfig             retryConfig;
-    private RemoteRetryJobQueue     remoteRetryJobQueue;
-    private BlockingQueue<RetryJob> retryJobQueue;
-    private RetryService            retryService;
-    private RetryJobDispatcher retryJobDispatcher;
-    private RetryJobLoader retryJobLoader;
-    private RetryJobFetcher retryJobFetcher;
-    private RetryWaiter retryWaiter;
+    private Logger                   logger;
+    private RetryConfig              retryConfig;
+    private RemoteRetryJobQueue      remoteRetryJobQueue;
+    private BlockingQueue<RetryJob>  retryJobQueue;
+    private RetryService             retryService;
+    private RetryJobDispatcher       retryJobDispatcher;
+    private RetryJobLoader           retryJobLoader;
+    private RetryJobFetcher          retryJobFetcher;
+    private RetryBroker              retryBroker;
     private ScheduledExecutorService retryJobFetcherScheduler;
     private ScheduledExecutorService retryJobLoaderScheduler;
     private ScheduledExecutorService retryWaiterScheduler;
@@ -100,7 +100,7 @@ public class RetryServer extends AbstractMachine implements Machine {
         retryJobDispatcher = new DefaultRetryJobDispatcher(retryConfig, retryService);
         retryJobFetcher = new DefaultRetryJobFetcher(retryJobDispatcher);
         retryJobLoader = new DefaultRetryJobLoader(retryConfig, retryService);
-        retryWaiter = new DefaultRetryWaiter(retryJobDAO, retryParamDAO);
+        retryBroker = new DefaultRetryBroker(retryJobDAO, retryParamDAO);
     }
 
     @Override
@@ -141,12 +141,12 @@ public class RetryServer extends AbstractMachine implements Machine {
             }
         }, 1, 1, TimeUnit.SECONDS);
 
-        //RetryWaiter
+        //RetryBroker
         retryWaiterScheduler = Executors.newSingleThreadScheduledExecutor();
         retryWaiterScheduler.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 try {
-                    retryWaiter.submit(buildRetryJob());
+                    retryBroker.submit(buildRetryJob());
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }

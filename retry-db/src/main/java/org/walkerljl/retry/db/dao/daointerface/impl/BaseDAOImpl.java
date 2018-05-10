@@ -1,13 +1,13 @@
 package org.walkerljl.retry.db.dao.daointerface.impl;
 
+import java.io.Serializable;
+
 import org.walkerljl.toolkit.db.orm.executor.Executor;
 import org.walkerljl.toolkit.db.orm.session.SqlSession;
 
-import java.io.Serializable;
-
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public abstract class BaseDAOImpl<T, KEY extends Serializable> {
 

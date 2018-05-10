@@ -1,6 +1,6 @@
 package org.walkerljl.retry.demo.impl.defaults;
 
-import org.walkerljl.retry.RetryWaiter;
+import org.walkerljl.retry.RetryBroker;
 import org.walkerljl.retry.db.dao.ModelAndDOConverter;
 import org.walkerljl.retry.db.dao.daointerface.RetryJobDAO;
 import org.walkerljl.retry.db.dao.daointerface.RetryParamDAO;
@@ -10,16 +10,16 @@ import org.walkerljl.retry.model.RetryParam;
 import org.walkerljl.toolkit.lang.CollectionUtils;
 
 /**
- * DefaultRetryWaiter
+ * DefaultRetryBroker
  *
  * @author xingxun
  */
-public class DefaultRetryWaiter implements RetryWaiter {
+public class DefaultRetryBroker implements RetryBroker {
 
     private RetryJobDAO   retryJobDAO;
     private RetryParamDAO retryParamDAO;
 
-    public DefaultRetryWaiter(RetryJobDAO retryJobDAO, RetryParamDAO retryParamDAO) {
+    public DefaultRetryBroker(RetryJobDAO retryJobDAO, RetryParamDAO retryParamDAO) {
         this.retryJobDAO = retryJobDAO;
         this.retryParamDAO = retryParamDAO;
     }

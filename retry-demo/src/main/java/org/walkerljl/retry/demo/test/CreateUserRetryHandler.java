@@ -9,7 +9,7 @@ import org.walkerljl.retry.support.RetryContext;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class CreateUserRetryHandler implements RetryHandler {
 

@@ -17,7 +17,7 @@ import org.walkerljl.toolkit.lang.CollectionUtils;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class ModelAndDOConverter {
 

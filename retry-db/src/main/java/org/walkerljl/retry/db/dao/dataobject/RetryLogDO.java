@@ -8,7 +8,7 @@ import org.walkerljl.toolkit.standard.model.BaseEntity;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 @Table("retry_log")
 public class RetryLogDO extends BaseEntity {

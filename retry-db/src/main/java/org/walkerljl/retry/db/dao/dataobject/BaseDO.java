@@ -7,7 +7,7 @@ import org.walkerljl.toolkit.standard.model.BaseEntity;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class BaseDO extends BaseEntity {
 

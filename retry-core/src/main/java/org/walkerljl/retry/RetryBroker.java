@@ -3,11 +3,11 @@ package org.walkerljl.retry;
 import org.walkerljl.retry.model.RetryJob;
 
 /**
- * Retry waiter
+ * Retry broker
  *
  * @author xingxun
  */
-public interface RetryWaiter {
+public interface RetryBroker {
 
     /**
      * Submit a retry job to retry service

@@ -7,8 +7,9 @@ import org.walkerljl.toolkit.db.orm.session.SqlSession;
 import org.walkerljl.toolkit.db.orm.session.defaults.DefaultSqlSession;
 
 /**
+ * DbUtil
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class DbUtil {
 

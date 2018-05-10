@@ -2,7 +2,7 @@ package org.walkerljl.retry.demo.test;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public interface UserService {
 

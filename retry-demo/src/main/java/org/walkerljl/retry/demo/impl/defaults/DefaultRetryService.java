@@ -15,7 +15,7 @@ import org.walkerljl.retry.model.param.ReleaseRetryJobParam;
 
 /**
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class DefaultRetryService implements RetryService {
 
