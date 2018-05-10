@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!--  Log4j配置文件。-->
+<log4j:configuration>
+
+    <appender name="STDOUT-APPENDER" class="org.apache.log4j.ConsoleAppender">
+        <param name="encoding" value="UTF-8"/>
+        <param name="target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="STDERR-APPENDER" class="org.apache.log4j.ConsoleAppender">
+        <param name="encoding" value="UTF-8"/>
+        <param name="target" value="System.err"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="ERROR-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/common-error.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <param name="threshold" value="error"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- [公共Appender] 默认 -->
+    <appender name="DEFAULT-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/common-default.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- RETRY-JOB-FETCHER APPENDER start-->
+    <appender name="RETRY-JOB-FETCHER-DIGEST-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-fetcher-digest.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <appender name="RETRY-JOB-FETCHER-DETAIL-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-fetcher-detail.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <!-- RETRY-JOB-FETCHER APPENDER end-->
+
+    <!-- RETRY-JOB-LOADER APPENDER start-->
+    <appender name="RETRY-JOB-LOADER-DIGEST-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-loader-digest.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <appender name="RETRY-JOB-LOADER-DETAIL-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-loader-detail.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <!-- RETRY-JOB-LOADER APPENDER end-->
+
+    <!-- SERVICE APPENDER start-->
+    <appender name="SERVICE-DETAIL-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/toolkit-template/service-detail.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <appender name="SERVICE-DIGEST-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/toolkit-template/service-digest.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <!-- SERVICE APPENDER end-->
+
+    <!--  ========================================================= -->
+    <logger name="STDOUT" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="STDOUT-APPENDER"/>
+    </logger>
+
+    <logger name="STDERR" additivity="false">
+        <level value="ERROR"/>
+        <appender-ref ref="STDERR-APPENDER"/>
+    </logger>
+
+    <!-- RetryJobRetcher LOGGER start-->
+    <logger name="RETRY-JOB-FETCHER-DIGEST" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="RETRY-JOB-FETCHER-DIGEST-APPENDER"/>
+    </logger>
+    <logger name="RETRY-JOB-FETCHER-DETAIL" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="RETRY-JOB-FETCHER-DETAIL-APPENDER"/>
+    </logger>
+    <!-- RetryJobRetcher LOGGER end-->
+
+    <!-- RetryJobLoader LOGGER start-->
+    <logger name="RETRY-JOB-LOADER-DIGEST" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="RETRY-JOB-LOADER-DIGEST-APPENDER"/>
+    </logger>
+    <logger name="RETRY-JOB-LOADER-DETAIL" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="RETRY-JOB-LOADER-DETAIL-APPENDER"/>
+    </logger>
+    <!-- RetryJobLoader LOGGER end-->
+
+    <!-- SERVICE LOGGER start-->
+    <logger name="SERVICE-DIGEST" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="SERVICE-DIGEST-APPENDER"/>
+    </logger>
+    <logger name="SERVICE-DETAIL" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="SERVICE-DETAIL-APPENDER"/>
+    </logger>
+    <!-- SERVICE LOGGER end-->
+
+    <logger name="org.walkerljl.toolkit.db" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="DEFAULT-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+        <appender-ref ref="STDERR-APPENDER"/>
+    </logger>
+
+    <root>
+        <level value="DEBUG"/>
+        <appender-ref ref="DEFAULT-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+        <appender-ref ref="STDERR-APPENDER"/>
+    </root>
+
+</log4j:configuration>
+
