@@ -6,6 +6,7 @@ import org.walkerljl.toolkit.db.api.annotation.Column;
 import org.walkerljl.toolkit.standard.model.BaseEntity;
 
 /**
+ * 基础DO
  *
  * @author xingxun
  */
@@ -30,13 +31,13 @@ public class BaseDO extends BaseEntity {
     private String creator;
     /** 创建时间*/
     @Column("gmt_create")
-    private Date   created;
+    private Date   createdTime;
     /** 修改者*/
     @Column("modifier")
     private String modifier;
     /** 修改时间*/
     @Column("gmt_modified")
-    private Date   modified;
+    private Date   modifiedTime;
 
     public BaseDO() {}
 
@@ -131,21 +132,21 @@ public class BaseDO extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>created</tt>.
+     * Getter method for property <tt>createdTime</tt>.
      *
-     * @return property value of created
+     * @return property value of createdTime
      */
-    public Date getCreated() {
-        return created;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 
     /**
-     * Setter method for property <tt>created</tt>.
+     * Setter method for property <tt>createdTime</tt>.
      *
-     * @param created  value to be assigned to property created
+     * @param createdTime  value to be assigned to property createdTime
      */
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 
     /**
@@ -167,20 +168,25 @@ public class BaseDO extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>modified</tt>.
+     * Getter method for property <tt>modifiedTime</tt>.
      *
-     * @return property value of modified
+     * @return property value of modifiedTime
      */
-    public Date getModified() {
-        return modified;
+    public Date getModifiedTime() {
+        return modifiedTime;
     }
 
     /**
-     * Setter method for property <tt>modified</tt>.
+     * Setter method for property <tt>modifiedTime</tt>.
      *
-     * @param modified  value to be assigned to property modified
+     * @param modifiedTime  value to be assigned to property modifiedTime
      */
-    public void setModified(Date modified) {
-        this.modified = modified;
+    public void setModifiedTime(Date modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

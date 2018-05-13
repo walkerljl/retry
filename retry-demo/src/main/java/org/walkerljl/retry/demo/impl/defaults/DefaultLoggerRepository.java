@@ -1,7 +1,7 @@
 package org.walkerljl.retry.demo.impl.defaults;
 
-import org.walkerljl.retry.log.logger.Logger;
-import org.walkerljl.retry.log.logger.LoggerRepository;
+import org.walkerljl.retry.logger.Logger;
+import org.walkerljl.retry.logger.LoggerRepository;
 import org.walkerljl.toolkit.logging.LoggerFactory;
 
 /**

@@ -1,21 +1,23 @@
 package org.walkerljl.retry.model.enums;
 
 /**
- * Retry param status
+ * 重试参数状态
  *
  * @author xingxun
  */
 public enum RetryParamStatusEnum implements IEnum {
 
     /**
-     * Normal
+     * 正常
      */
-    NORMAL("normal", "normal"),
+    NORMAL("normal", "正常"),
 
     /**
-     * Deleted
+     * 已删除
      */
-    DELETED("deleted", "deleted"),;
+    DELETED("deleted", "已删除"),
+
+    ;
 
     /** Code*/
     private String code;

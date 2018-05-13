@@ -3,7 +3,7 @@ package org.walkerljl.retry.alarm;
 import org.walkerljl.retry.model.BaseEntity;
 
 /**
- * Alarm information
+ * 报警信息
  *
  * @author xingxun
  */
@@ -13,7 +13,7 @@ public class AlarmInfo extends BaseEntity {
 
     /** Key*/
     private String key;
-    /** Description*/
+    /** 描述*/
     private String description;
 
     public AlarmInfo(String key, String description) {

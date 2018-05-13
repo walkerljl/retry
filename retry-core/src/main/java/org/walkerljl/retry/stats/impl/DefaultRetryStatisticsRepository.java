@@ -26,7 +26,7 @@ public class DefaultRetryStatisticsRepository implements RetryStatisticsReposito
 
     @Override
     public Iterable<RetryStatistics> findAll() {
-        return new ArrayList<RetryStatistics>(repository.values());
+        return new ArrayList<>(repository.values());
     }
 
     @Override

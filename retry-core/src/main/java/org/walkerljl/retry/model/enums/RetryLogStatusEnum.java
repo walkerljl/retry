@@ -1,26 +1,28 @@
 package org.walkerljl.retry.model.enums;
 
 /**
- * Retry log status
+ * 重试日志状态
  *
  * @author xingxun
  */
 public enum RetryLogStatusEnum implements IEnum {
 
     /**
-     * Success
+     * 成功
      */
-    SUCCESS("success", "success"),
+    SUCCESS("success", "成功"),
 
     /**
      * Failure
      */
-    FAILURE("failure", "failure"),
+    FAILURE("failure", "失败"),
 
     /**
-     * Deleted
+     * 已删除
      */
-    DELETED("deleted", "deleted"),;
+    DELETED("deleted", "已删除"),
+
+    ;
 
     /** Code*/
     private String code;

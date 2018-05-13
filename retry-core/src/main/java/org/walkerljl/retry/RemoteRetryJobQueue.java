@@ -3,16 +3,16 @@ package org.walkerljl.retry;
 import org.walkerljl.retry.model.RetryJob;
 
 /**
- * RemoteRetryJobQueue
+ * 远程重试队列
  *
  * @author xingxun
  */
 public interface RemoteRetryJobQueue {
 
     /**
-     * Batch add retry job
+     * 添加重试任务
      *
-     * @param retryJob Retry job
+     * @param retryJob 重试任务
      */
     void addRetryJob(RetryJob retryJob);
 }

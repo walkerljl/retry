@@ -11,9 +11,10 @@ import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.RetryLog;
 import org.walkerljl.retry.model.RetryParam;
 import org.walkerljl.retry.model.param.LockRetryJobParam;
-import org.walkerljl.retry.model.param.ReleaseRetryJobParam;
+import org.walkerljl.retry.model.param.UnlockRetryJobParam;
 
 /**
+ * 默认的重试业务接口
  *
  * @author xingxun
  */
@@ -31,45 +32,50 @@ public class DefaultRetryService implements RetryService {
     }
 
     @Override
-    public RetryJob getRetryJob(String bizType, String bizId) {
-        RetryJob retryJob = ModelAndDOConverter.toRetryJob(retryJobDAO.selectByBizTypeAndBizId(bizType, bizId));
+    public RetryJob getRetryJobById(String retryJobId) {
+        RetryJob retryJob = ModelAndDOConverter.toRetryJob(retryJobDAO.getById(retryJobId));
         if (retryJob == null) {
             return null;
         }
-        Long retryJobId = Long.parseLong(retryJob.getId());
-        List<RetryParam> retryParams = ModelAndDOConverter.toRetryParams(retryParamDAO.selectListByRetryJobId(retryJobId));
+        List<RetryParam> retryParams = ModelAndDOConverter.toRetryParams(retryParamDAO.listByRetryJobId(Long.parseLong(retryJob.getId())));
         retryJob.setParams(retryParams);
 
         return retryJob;
     }
 
     @Override
-    public int lockRetryJob(LockRetryJobParam lockRetryJobParam) {
-        return retryJobDAO.lock(lockRetryJobParam);
+    public boolean lockRetryJob(LockRetryJobParam lockRetryJobParam) {
+        int count = retryJobDAO.lock(lockRetryJobParam.getRetryJobId(),
+                lockRetryJobParam.getRetryTimeout(),
+                lockRetryJobParam.getLastRetryTime(),
+                lockRetryJobParam.getModifiedTime());
+        return count > 0;
     }
 
     @Override
-    public void unlockRetryJob(ReleaseRetryJobParam releaseRetryJobParam) {
-        retryJobDAO.unlock(releaseRetryJobParam);
+    public boolean unlockRetryJob(UnlockRetryJobParam unlockRetryJobParam) {
+        int count = retryJobDAO.unlock(unlockRetryJobParam.getRetryJobId(), unlockRetryJobParam.getStatus().getCode(),
+                unlockRetryJobParam.getNextRetryTime(), unlockRetryJobParam.getModifiedTime());
+        return count > 0;
     }
 
     @Override
-    public void recordRetryLog(RetryLog retryLog) {
-        retryLogDAO.insert(ModelAndDOConverter.toRetryLogDO(retryLog));
+    public void saveRetryLog(RetryLog retryLog) {
+        retryLogDAO.save(ModelAndDOConverter.toRetryLogDO(retryLog));
     }
 
     @Override
-    public List<RetryJob> listUnprocessRetryJobsByPage(long jobLoadInterval, int currentPage, int pageSize) {
-        return ModelAndDOConverter.toRetryJobs(retryJobDAO.selectUnprocessRetryJobsByPage(jobLoadInterval, currentPage, pageSize));
+    public List<RetryJob> listUnprocessRetryJobs(long jobLoadInterval, int currentPage, int pageSize) {
+        return ModelAndDOConverter.toRetryJobs(retryJobDAO.listUnprocessRetryJobs(jobLoadInterval, currentPage, pageSize));
     }
 
     @Override
-    public List<RetryJob> listFailureRetryJobsByPage(long jobLoadInterval, int currentPage, int pageSize) {
-        return ModelAndDOConverter.toRetryJobs(retryJobDAO.selectFailureRetryJobsByPage(jobLoadInterval, currentPage, pageSize));
+    public List<RetryJob> listFailureRetryJobs(long jobLoadInterval, int currentPage, int pageSize) {
+        return ModelAndDOConverter.toRetryJobs(retryJobDAO.listFailureRetryJobs(jobLoadInterval, currentPage, pageSize));
     }
 
     @Override
-    public List<RetryJob> listTimeoutRetryJobsByPage(long jobLoadInterval, long retryTimeout, int currentPage, int pageSize) {
-        return ModelAndDOConverter.toRetryJobs(retryJobDAO.selectTimeoutRetryJobsByPage(jobLoadInterval, retryTimeout, currentPage, pageSize));
+    public List<RetryJob> listTimeoutRetryJobs(long jobLoadInterval, long retryTimeout, int currentPage, int pageSize) {
+        return ModelAndDOConverter.toRetryJobs(retryJobDAO.listTimeoutRetryJobs(jobLoadInterval, retryTimeout, currentPage, pageSize));
     }
 }

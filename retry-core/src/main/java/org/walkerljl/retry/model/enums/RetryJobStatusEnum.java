@@ -1,34 +1,34 @@
 package org.walkerljl.retry.model.enums;
 
 /**
- * Retry job status
+ * 重试任务状态
  *
  * @author xingxun
  */
 public enum RetryJobStatusEnum implements IEnum {
 
     /**
-     * Unprocess
+     * 未处理
      */
     UNPROCESS("unprocess", "unprocess"),
 
     /**
-     * Processing
+     * 处理中
      */
     PROCESSING("processing", "processing"),
 
     /**
-     * Processed
+     * 已处理
      */
     PROCESSED("processed", "processed"),
 
     /**
-     * Failure
+     * 处理失败
      */
     FAILURE("failure", "failure"),
 
     /**
-     * Deleted
+     * 已删除
      */
     DELETED("deleted", "deleted"),;
 

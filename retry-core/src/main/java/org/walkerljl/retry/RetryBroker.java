@@ -10,9 +10,9 @@ import org.walkerljl.retry.model.RetryJob;
 public interface RetryBroker {
 
     /**
-     * Submit a retry job to retry service
+     * 提交一个重试任务
      *
-     * @param retryJob retry job
+     * @param retryJob 重试任务
      */
     void submit(RetryJob retryJob);
 }

@@ -7,6 +7,7 @@ import org.walkerljl.toolkit.db.api.annotation.Table;
 import org.walkerljl.toolkit.standard.model.BaseEntity;
 
 /**
+ * 重试日志
  *
  * @author xingxun
  */
@@ -35,7 +36,7 @@ public class RetryLogDO extends BaseEntity {
     private String  creator;
     /** 创建时间*/
     @Column("gmt_create")
-    private Date    created;
+    private Date    createdTime;
 
     public RetryLogDO() {}
 
@@ -149,20 +150,25 @@ public class RetryLogDO extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>created</tt>.
+     * Getter method for property <tt>createdTime</tt>.
      *
-     * @return property value of created
+     * @return property value of createdTime
      */
-    public Date getCreated() {
-        return created;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 
     /**
-     * Setter method for property <tt>created</tt>.
+     * Setter method for property <tt>createdTime</tt>.
      *
-     * @param created  value to be assigned to property created
+     * @param createdTime  value to be assigned to property createdTime
      */
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

@@ -13,9 +13,9 @@ import java.util.concurrent.TimeUnit;
 import org.walkerljl.configuration.client.ConfiguratorFactory;
 import org.walkerljl.configuration.client.impl.readonly.PropertiesConfiguratorProvider;
 import org.walkerljl.retry.RemoteRetryJobQueue;
-import org.walkerljl.retry.RetryJobFetcher;
-import org.walkerljl.retry.RetryService;
 import org.walkerljl.retry.RetryBroker;
+import org.walkerljl.retry.RetryJobDispatcher;
+import org.walkerljl.retry.RetryService;
 import org.walkerljl.retry.db.dao.daointerface.RetryJobDAO;
 import org.walkerljl.retry.db.dao.daointerface.RetryLogDAO;
 import org.walkerljl.retry.db.dao.daointerface.RetryParamDAO;
@@ -23,16 +23,19 @@ import org.walkerljl.retry.db.dao.daointerface.impl.DbUtil;
 import org.walkerljl.retry.db.dao.daointerface.impl.RetryJobDAOImpl;
 import org.walkerljl.retry.db.dao.daointerface.impl.RetryLogDAOImpl;
 import org.walkerljl.retry.db.dao.daointerface.impl.RetryParamDAOImpl;
-import org.walkerljl.retry.demo.impl.defaults.DefaultRetryService;
 import org.walkerljl.retry.demo.impl.defaults.DefaultRetryBroker;
+import org.walkerljl.retry.demo.impl.defaults.DefaultRetryService;
 import org.walkerljl.retry.demo.test.CreateUserRetryHandler;
 import org.walkerljl.retry.exception.machine.CannotStartMachineException;
 import org.walkerljl.retry.exception.machine.CannotStopMachineException;
 import org.walkerljl.retry.exception.resouce.CannotInitResourceException;
+import org.walkerljl.retry.impl.RetryJobHandlerRepository;
+import org.walkerljl.retry.impl.RetryJobLoader;
 import org.walkerljl.retry.impl.defaults.DefaultRemoteRetryJobQueue;
+import org.walkerljl.retry.impl.defaults.DefaultRetryJobDispatcher;
 import org.walkerljl.retry.impl.defaults.DefaultRetryJobLoader;
-import org.walkerljl.retry.log.logger.Logger;
-import org.walkerljl.retry.log.logger.LoggerFactory;
+import org.walkerljl.retry.impl.log.logger.LoggerFactory;
+import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.model.RetryConfig;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.RetryParam;
@@ -41,17 +44,13 @@ import org.walkerljl.retry.model.enums.RetryParamStatusEnum;
 import org.walkerljl.retry.model.enums.RetryPriorityEnum;
 import org.walkerljl.retry.standard.Machine;
 import org.walkerljl.retry.standard.abstracts.AbstractMachine;
-import org.walkerljl.retry.impl.defaults.DefaultRetryJobFetcher;
-import org.walkerljl.retry.support.RetryJobDispatcher;
-import org.walkerljl.retry.support.RetryJobHandlerRepository;
-import org.walkerljl.retry.support.RetryJobLoader;
-import org.walkerljl.retry.support.impl.DefaultRetryJobDispatcher;
 import org.walkerljl.toolkit.db.ds.DataSourceFactory;
 import org.walkerljl.toolkit.db.ds.impl.dbcp.DbcpDataSourceFactory;
 import org.walkerljl.toolkit.db.orm.enums.DatabaseType;
 import org.walkerljl.toolkit.db.orm.session.Configuration;
 
 /**
+ * RetryServer
  *
  * @author xingxun
  */
@@ -64,7 +63,6 @@ public class RetryServer extends AbstractMachine implements Machine {
     private RetryService             retryService;
     private RetryJobDispatcher       retryJobDispatcher;
     private RetryJobLoader           retryJobLoader;
-    private RetryJobFetcher          retryJobFetcher;
     private RetryBroker              retryBroker;
     private ScheduledExecutorService retryJobFetcherScheduler;
     private ScheduledExecutorService retryJobLoaderScheduler;
@@ -92,13 +90,13 @@ public class RetryServer extends AbstractMachine implements Machine {
 
         //config
         retryConfig = new RetryConfig();
-        retryJobQueue = new ArrayBlockingQueue<RetryJob>(1000);
+        retryConfig.setJobLoadPageSize(1);
+        retryJobQueue = new ArrayBlockingQueue<>(100);
         remoteRetryJobQueue = new DefaultRemoteRetryJobQueue(retryJobQueue);
 
         RetryJobHandlerRepository.register(CreateUserRetryHandler.class.getSimpleName(), new CreateUserRetryHandler());
 
         retryJobDispatcher = new DefaultRetryJobDispatcher(retryConfig, retryService);
-        retryJobFetcher = new DefaultRetryJobFetcher(retryJobDispatcher);
         retryJobLoader = new DefaultRetryJobLoader(retryConfig, retryService);
         retryBroker = new DefaultRetryBroker(retryJobDAO, retryParamDAO);
     }
@@ -121,9 +119,9 @@ public class RetryServer extends AbstractMachine implements Machine {
             public void run() {
                 try {
                     RetryJob retryJob = retryJobQueue.take();
-                    retryJobFetcher.onFetch(retryJob);
+                    retryJobDispatcher.dispatch(retryJob);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
         }, 1, 1, TimeUnit.SECONDS);
@@ -136,10 +134,10 @@ public class RetryServer extends AbstractMachine implements Machine {
                 try {
                     retryJobLoader.load(remoteRetryJobQueue);
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
-        }, 1, 1, TimeUnit.SECONDS);
+        }, 1, 30, TimeUnit.SECONDS);
 
         //RetryBroker
         retryWaiterScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -148,10 +146,10 @@ public class RetryServer extends AbstractMachine implements Machine {
                 try {
                     retryBroker.submit(buildRetryJob());
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
-        }, 1, 1, TimeUnit.SECONDS);
+        }, 1, 60 * 60, TimeUnit.SECONDS);
     }
 
     private RetryJob buildRetryJob() {
@@ -167,9 +165,9 @@ public class RetryServer extends AbstractMachine implements Machine {
         retryJob.setAttempts(0);
         retryJob.setMaxAttempts(5);
         retryJob.setStatus(RetryJobStatusEnum.UNPROCESS);
-        retryJob.setCreated(new Date());
+        retryJob.setCreatedTime(new Date());
         retryJob.setCreator("xingxun");
-        retryJob.setModified(retryJob.getCreated());
+        retryJob.setModifiedTime(retryJob.getCreatedTime());
         retryJob.setModifier(retryJob.getCreator());
 
         List<RetryParam> retryParams = new ArrayList<>(1);
@@ -178,10 +176,11 @@ public class RetryServer extends AbstractMachine implements Machine {
         retryParams.add(retryParam);
         retryParam.setValue("{\"id\":\"xingxun\",\"name\":\"行寻\"}");
         retryParam.setStatus(RetryParamStatusEnum.NORMAL);
-        retryParam.setCreated(new Date());
+        retryParam.setCreatedTime(new Date());
         retryParam.setCreator("xingxun");
-        retryParam.setModified(retryJob.getCreated());
-        retryParam.setModifier(retryJob.getCreator());
+        retryParam.setCreatedTime(retryJob.getCreatedTime());
+        retryParam.setModifier(retryJob.getModifier());
+        retryParam.setModifiedTime(retryJob.getCreatedTime());
 
         return retryJob;
     }

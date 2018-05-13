@@ -7,20 +7,27 @@ import org.walkerljl.retry.db.dao.dataobject.RetryJobDO;
 import org.walkerljl.retry.db.dao.dataobject.RetryLogDO;
 import org.walkerljl.retry.db.dao.dataobject.RetryParamDO;
 import org.walkerljl.retry.db.util.JSONUtil;
-import org.walkerljl.retry.model.enums.RetryJobStatusEnum;
-import org.walkerljl.retry.model.enums.RetryParamStatusEnum;
-import org.walkerljl.retry.model.enums.RetryPriorityEnum;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.RetryLog;
 import org.walkerljl.retry.model.RetryParam;
-import org.walkerljl.toolkit.lang.CollectionUtils;
+import org.walkerljl.retry.model.enums.RetryJobStatusEnum;
+import org.walkerljl.retry.model.enums.RetryParamStatusEnum;
+import org.walkerljl.retry.model.enums.RetryPriorityEnum;
+import org.walkerljl.retry.impl.util.CollectionUtil;
 
 /**
+ * 核型领域模型、DO转换器
  *
  * @author xingxun
  */
 public class ModelAndDOConverter {
 
+    /**
+     * toRetryLogDO
+     *
+     * @param retryLog
+     * @return
+     */
     public static RetryLogDO toRetryLogDO(RetryLog retryLog) {
         if (retryLog == null) {
             return null;
@@ -30,12 +37,18 @@ public class ModelAndDOConverter {
         retryLogDO.setAttempts(retryLog.getAttempts());
         retryLogDO.setStatus(retryLog.getStatus().getCode());
         retryLogDO.setCreator(retryLog.getCreator());
-        retryLogDO.setCreated(retryLog.getCreated());
+        retryLogDO.setCreatedTime(retryLog.getCreatedTime());
         return retryLogDO;
     }
 
+    /**
+     * toRetryJobs
+     *
+     * @param retryJobDOs
+     * @return
+     */
     public static List<RetryJob> toRetryJobs(List<RetryJobDO> retryJobDOs) {
-        if (CollectionUtils.isEmpty(retryJobDOs)) {
+        if (CollectionUtil.isEmpty(retryJobDOs)) {
             return null;
         }
         List<RetryJob> retryJobs = new ArrayList<RetryJob>(retryJobDOs.size());
@@ -45,6 +58,12 @@ public class ModelAndDOConverter {
         return retryJobs;
     }
 
+    /**
+     * toRetryJob
+     *
+     * @param retryJobDO
+     * @return
+     */
     public static RetryJob toRetryJob(RetryJobDO retryJobDO) {
         if (retryJobDO == null) {
             return null;
@@ -65,13 +84,19 @@ public class ModelAndDOConverter {
         retryJob.setRemark(retryJobDO.getRemark());
         retryJob.setStatus(RetryJobStatusEnum.getType(retryJobDO.getStatus()));
         retryJob.setCreator(retryJobDO.getCreator());
-        retryJob.setCreated(retryJobDO.getCreated());
+        retryJob.setCreatedTime(retryJobDO.getCreatedTime());
         retryJob.setModifier(retryJobDO.getModifier());
-        retryJob.setModified(retryJobDO.getModified());
+        retryJob.setModifiedTime(retryJobDO.getModifiedTime());
 
         return retryJob;
     }
 
+    /**
+     * toRetryJobDO
+     *
+     * @param retryJob
+     * @return
+     */
     public static RetryJobDO toRetryJobDO(RetryJob retryJob) {
         if (retryJob == null) {
             return null;
@@ -91,13 +116,19 @@ public class ModelAndDOConverter {
         retryJobDO.setRemark(retryJob.getRemark());
         retryJobDO.setStatus(retryJob.getStatus().getCode());
         retryJobDO.setCreator(retryJob.getCreator());
-        retryJobDO.setCreated(retryJob.getCreated());
+        retryJobDO.setCreatedTime(retryJob.getCreatedTime());
         retryJobDO.setModifier(retryJob.getModifier());
-        retryJobDO.setModified(retryJob.getModified());
+        retryJobDO.setModifiedTime(retryJob.getModifiedTime());
 
         return retryJobDO;
     }
 
+    /**
+     * toRetryParam
+     *
+     * @param retryParamDO
+     * @return
+     */
     public static RetryParam toRetryParam(RetryParamDO retryParamDO) {
         if (retryParamDO == null) {
             return null;
@@ -109,23 +140,35 @@ public class ModelAndDOConverter {
         retryParam.setRemark(retryParamDO.getRemark());
         retryParam.setStatus(RetryParamStatusEnum.getType(retryParamDO.getStatus()));
         retryParam.setCreator(retryParamDO.getCreator());
-        retryParam.setCreated(retryParamDO.getCreated());
+        retryParam.setCreatedTime(retryParamDO.getCreatedTime());
         retryParam.setModifier(retryParamDO.getModifier());
-        retryParam.setModified(retryParamDO.getModified());
+        retryParam.setModifiedTime(retryParamDO.getModifiedTime());
         return retryParam;
     }
 
+    /**
+     * toRetryParams
+     *
+     * @param retryParamDOList
+     * @return
+     */
     public static List<RetryParam> toRetryParams(List<RetryParamDO> retryParamDOList) {
-        if (CollectionUtils.isEmpty(retryParamDOList)) {
+        if (CollectionUtil.isEmpty(retryParamDOList)) {
             return null;
         }
-        List<RetryParam> retryParams = new ArrayList<RetryParam>(retryParamDOList.size());
+        List<RetryParam> retryParams = new ArrayList<>(retryParamDOList.size());
         for (RetryParamDO retryParamDO : retryParamDOList) {
             retryParams.add(toRetryParam(retryParamDO));
         }
         return retryParams;
     }
 
+    /**
+     * toRetryParamDO
+     *
+     * @param retryParam
+     * @return
+     */
     public static RetryParamDO toRetryParamDO(RetryParam retryParam) {
         if (retryParam == null) {
             return null;
@@ -137,9 +180,9 @@ public class ModelAndDOConverter {
         retryParamDO.setRemark(retryParam.getRemark());
         retryParamDO.setStatus(retryParam.getStatus().getCode());
         retryParamDO.setCreator(retryParam.getCreator());
-        retryParamDO.setCreated(retryParam.getCreated());
+        retryParamDO.setCreatedTime(retryParam.getCreatedTime());
         retryParamDO.setModifier(retryParam.getModifier());
-        retryParamDO.setModified(retryParam.getModified());
+        retryParamDO.setModifiedTime(retryParam.getModifiedTime());
         return retryParamDO;
     }
 }

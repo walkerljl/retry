@@ -55,4 +55,9 @@ public class RetryParamDO extends BaseDO {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

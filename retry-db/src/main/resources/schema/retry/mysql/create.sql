@@ -29,7 +29,7 @@ ALTER TABLE `retry_job` ADD INDEX idx_biz_id(`biz_id`);
 ALTER TABLE `retry_job` ADD UNIQUE KEY(`biz_id`);
 
 /**
- * 重试参数表
+ * 重试任务参数表
  */
 CREATE TABLE retry_param(
 	`id` BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '主键Id',
@@ -38,7 +38,7 @@ CREATE TABLE retry_param(
 	`ext_info` VARCHAR(1024) DEFAULT '' COMMENT '扩展信息',
 	`remark` VARCHAR(256) DEFAULT '' COMMENT '备注',
 	`status` VARCHAR(16) NOT NULL COMMENT '状态',
-	`creator` VARCHAR(64) NOT NULL COMMENT '创建者',
+	`creator` VARCHAR(128) NOT NULL COMMENT '创建者',
 	`gmt_create` DATETIME NOT NULL COMMENT '创建时间',
 	`modifier` VARCHAR(128) NOT NULL COMMENT '修改者',
 	`gmt_modified` DATETIME NOT NULL COMMENT '修改时间'

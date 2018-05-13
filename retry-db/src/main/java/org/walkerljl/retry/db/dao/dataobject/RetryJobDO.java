@@ -6,6 +6,7 @@ import org.walkerljl.toolkit.db.api.annotation.Column;
 import org.walkerljl.toolkit.db.api.annotation.Table;
 
 /**
+ * 重试任务
  *
  * @author xingxun
  */
@@ -204,5 +205,10 @@ public class RetryJobDO extends BaseDO {
      */
     public void setNextRetryTime(Date nextRetryTime) {
         this.nextRetryTime = nextRetryTime;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

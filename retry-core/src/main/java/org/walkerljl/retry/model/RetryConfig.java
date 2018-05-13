@@ -5,15 +5,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.walkerljl.retry.alarm.impl.LoggerAlarmListener;
-import org.walkerljl.retry.executor.RetryJobExecutorConfig;
+import org.walkerljl.retry.alarm.impl.LoggerAlarmRetryListener;
+import org.walkerljl.retry.impl.executor.RetryJobExecutorConfig;
 import org.walkerljl.retry.listener.RetryListener;
+import org.walkerljl.retry.listener.impl.RetryJobExecutorListener;
 import org.walkerljl.retry.stats.RetryStatisticsListener;
 import org.walkerljl.retry.stats.impl.DefaultRetryStatisticsRepository;
-import org.walkerljl.retry.util.AssertUtil;
+import org.walkerljl.retry.impl.util.AssertUtil;
 
 /**
- * Retry configuration
+ * 重试配置
  *
  * @author xingxun
  */
@@ -21,24 +22,25 @@ public class RetryConfig extends BaseEntity {
 
     private static final long serialVersionUID = -4088342977048677947L;
 
-    /** Interval of job load*/
-    private long jobLoadInterval        = 5;
-    /** Max job amount percent load*/
-    private int  maxJobAmountPerLoad    = 1000;
-    /** Job load page size*/
+    /** 任务加载间隔，单位：秒*/
+    private long jobLoadInterval        = 30;
+    /** 每次加载的最大任务数*/
+    private int  maxJobQuantityPerLoad  = 1000;
+    /** 每次分页查询的任务条数*/
     private int  jobLoadPageSize        = 200;
-    /** Job oad begin page number*/
+    /** 任务加载起始页码*/
     private int  jobLoadBeginPageNumber = 1;
-    /** Timeout of job retry*/
+    /** 任务重试超时时间，单位：秒*/
     private long jobRetryTimeout        = 300;
 
     private Map<String, RetryJobExecutorConfig> retryJobExecutorConfigMap;
 
-    private List<RetryListener> listeners = new ArrayList<RetryListener>(2);
+    private List<RetryListener> listeners = new ArrayList<RetryListener>(3);
 
     public RetryConfig() {
+        registerListener(new RetryJobExecutorListener());
         registerListener(new RetryStatisticsListener(new DefaultRetryStatisticsRepository()));
-        registerListener(new LoggerAlarmListener());
+        registerListener(new LoggerAlarmRetryListener());
     }
 
     public void registerListener(RetryListener retryListener) {
@@ -69,21 +71,21 @@ public class RetryConfig extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>maxJobAmountPerLoad</tt>.
+     * Getter method for property <tt>maxJobQuantityPerLoad</tt>.
      *
-     * @return property value of maxJobAmountPerLoad
+     * @return property value of maxJobQuantityPerLoad
      */
-    public int getMaxJobAmountPerLoad() {
-        return maxJobAmountPerLoad;
+    public int getMaxJobQuantityPerLoad() {
+        return maxJobQuantityPerLoad;
     }
 
     /**
-     * Setter method for property <tt>maxJobAmountPerLoad</tt>.
+     * Setter method for property <tt>maxJobQuantityPerLoad</tt>.
      *
-     * @param maxJobAmountPerLoad  value to be assigned to property maxJobAmountPerLoad
+     * @param maxJobQuantityPerLoad  value to be assigned to property maxJobQuantityPerLoad
      */
-    public void setMaxJobAmountPerLoad(int maxJobAmountPerLoad) {
-        this.maxJobAmountPerLoad = maxJobAmountPerLoad;
+    public void setMaxJobQuantityPerLoad(int maxJobQuantityPerLoad) {
+        this.maxJobQuantityPerLoad = maxJobQuantityPerLoad;
     }
 
     /**

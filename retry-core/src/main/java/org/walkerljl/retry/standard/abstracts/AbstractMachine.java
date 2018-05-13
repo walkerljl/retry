@@ -5,9 +5,9 @@ import org.walkerljl.retry.exception.machine.CannotStopMachineException;
 import org.walkerljl.retry.exception.machine.MachineException;
 import org.walkerljl.retry.exception.resouce.CannotDestroyResourceException;
 import org.walkerljl.retry.exception.resouce.CannotInitResourceException;
-import org.walkerljl.retry.log.logger.Logger;
-import org.walkerljl.retry.log.logger.LoggerFactory;
-import org.walkerljl.retry.log.util.LoggerUtil;
+import org.walkerljl.retry.logger.Logger;
+import org.walkerljl.retry.impl.log.logger.LoggerFactory;
+import org.walkerljl.retry.impl.log.util.LoggerUtil;
 import org.walkerljl.retry.standard.Machine;
 import org.walkerljl.retry.standard.MachineRepository;
 

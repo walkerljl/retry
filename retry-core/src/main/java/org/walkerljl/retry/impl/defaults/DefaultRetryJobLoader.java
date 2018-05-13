@@ -3,24 +3,26 @@ package org.walkerljl.retry.impl.defaults;
 import java.util.List;
 
 import org.walkerljl.retry.RemoteRetryJobQueue;
+import org.walkerljl.retry.impl.RetryConstants;
 import org.walkerljl.retry.RetryService;
 import org.walkerljl.retry.exception.machine.CannotStartMachineException;
 import org.walkerljl.retry.exception.machine.CannotStopMachineException;
-import org.walkerljl.retry.log.invocation.InvocationInfo;
-import org.walkerljl.retry.log.logger.Logger;
-import org.walkerljl.retry.log.logger.LoggerFactory;
-import org.walkerljl.retry.log.logger.LoggerNames;
-import org.walkerljl.retry.log.util.LoggerDetailUtil;
-import org.walkerljl.retry.log.util.LoggerDigestUtil;
-import org.walkerljl.retry.log.util.LoggerUtil;
+import org.walkerljl.retry.impl.log.invocation.InvocationInfo;
+import org.walkerljl.retry.logger.Logger;
+import org.walkerljl.retry.impl.log.logger.LoggerFactory;
+import org.walkerljl.retry.impl.log.logger.LoggerNames;
+import org.walkerljl.retry.impl.log.util.LoggerDetailUtil;
+import org.walkerljl.retry.impl.log.util.LoggerDigestUtil;
+import org.walkerljl.retry.impl.log.util.LoggerUtil;
 import org.walkerljl.retry.model.RetryConfig;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.standard.abstracts.AbstractMachine;
-import org.walkerljl.retry.support.RetryJobLoader;
-import org.walkerljl.retry.util.CollectionUtil;
+import org.walkerljl.retry.impl.RetryJobLoader;
+import org.walkerljl.retry.impl.util.ArrayUtil;
+import org.walkerljl.retry.impl.util.CollectionUtil;
 
 /**
- * DefaultRetryJobLoader
+ * 默认的重试任务加载器
  *
  * @author xingxun
  */
@@ -42,35 +44,30 @@ public class DefaultRetryJobLoader extends AbstractMachine implements RetryJobLo
 
     @Override
     public void load(RemoteRetryJobQueue remoteRetryJobQueue) {
-        InvocationInfo<Void> invocationInfo = new InvocationInfo<Void>(getClass(), "load");
+        InvocationInfo<RemoteRetryJobQueue, Void> invocationInfo = new InvocationInfo<>(getClass(), "load", remoteRetryJobQueue);
         try {
             this.remoteRetryJobQueue = remoteRetryJobQueue;
             int pageSize = retryConfig.getJobLoadPageSize();
-            if (pageSize > retryConfig.getMaxJobAmountPerLoad()) {
-                pageSize = retryConfig.getMaxJobAmountPerLoad();
+            if (pageSize > retryConfig.getMaxJobQuantityPerLoad()) {
+                pageSize = retryConfig.getMaxJobQuantityPerLoad();
             }
 
+            //加载失败的重试任务
             int failureRetryJobCounter = 0;
             failureRetryJobCounter = loadFailureRetryJobs(failureRetryJobCounter, retryConfig.getJobLoadBeginPageNumber(), pageSize);
-            if (LOGGER.isInfoEnabled()) {
-                LoggerUtil.info(LOGGER, String.format("Success loaded %s failure retry jobs.", failureRetryJobCounter));
-            }
 
+            //加载超时的重试任务
             int timeoutRetryJobCounter = 0;
             timeoutRetryJobCounter = loadTimeoutRetryJobs(timeoutRetryJobCounter, retryConfig.getJobLoadBeginPageNumber(), pageSize);
-            if (LOGGER.isInfoEnabled()) {
-                LoggerUtil.info(LOGGER, String.format("Success loaded %s timeout retry jobs.", timeoutRetryJobCounter));
-            }
 
+            //加载未处理的重试任务
             int unprocessRetryJobCounter = 0;
             unprocessRetryJobCounter = loadUnprocessRetryJobs(unprocessRetryJobCounter, retryConfig.getJobLoadBeginPageNumber(), pageSize);
-            if (LOGGER.isInfoEnabled()) {
-                LoggerUtil.info(LOGGER, String.format("Success loaded %s unprocess retry jobs.", unprocessRetryJobCounter));
-            }
 
-            invocationInfo.setSuccess();
+            invocationInfo.markResult(true,
+                    ArrayUtil.concat(",", new Integer[] {failureRetryJobCounter, timeoutRetryJobCounter, unprocessRetryJobCounter}), null);
         } catch (Throwable e) {
-            LoggerUtil.error(LOGGER, e, "Fail to load some retry jobs.");
+            invocationInfo.markFailure(e);
         } finally {
             try {
                 LoggerDigestUtil.logDigest(invocationInfo, DIGEST_LOGGER);
@@ -82,15 +79,15 @@ public class DefaultRetryJobLoader extends AbstractMachine implements RetryJobLo
     }
 
     private int loadFailureRetryJobs(int failureRetryJobCounter, int currentPage, int pageSize) {
-        List<RetryJob> retryJobs = retryService.listFailureRetryJobsByPage(retryConfig.getJobLoadInterval(), currentPage, pageSize);
-        if (retryJobs == null || retryJobs.isEmpty()) {
+        List<RetryJob> retryJobs = retryService.listFailureRetryJobs(retryConfig.getJobLoadInterval(), currentPage, pageSize);
+        if (CollectionUtil.isEmpty(retryJobs)) {
             return failureRetryJobCounter;
         }
         addRetryJobsToRemoteRetryJobQueue(retryJobs);
         failureRetryJobCounter += retryJobs.size();
 
         boolean isContinueList = (retryJobs.size() == pageSize && (failureRetryJobCounter + pageSize) <= retryConfig
-                .getMaxJobAmountPerLoad());
+                .getMaxJobQuantityPerLoad());
         if (!isContinueList) {
             return failureRetryJobCounter;
         }
@@ -98,17 +95,17 @@ public class DefaultRetryJobLoader extends AbstractMachine implements RetryJobLo
     }
 
     private int loadTimeoutRetryJobs(int timeoutRetryJobCounter, int currentPage, int pageSize) {
-        List<RetryJob> retryJobs = retryService.listTimeoutRetryJobsByPage(retryConfig.getJobLoadInterval(),
+        List<RetryJob> retryJobs = retryService.listTimeoutRetryJobs(retryConfig.getJobLoadInterval(),
                 retryConfig.getJobRetryTimeout(),
                 currentPage, pageSize);
-        if (retryJobs == null || retryJobs.isEmpty()) {
+        if (CollectionUtil.isEmpty(retryJobs)) {
             return timeoutRetryJobCounter;
         }
         addRetryJobsToRemoteRetryJobQueue(retryJobs);
         timeoutRetryJobCounter += retryJobs.size();
 
         boolean isContinueList = (retryJobs.size() == pageSize && (timeoutRetryJobCounter + pageSize) <= retryConfig
-                .getMaxJobAmountPerLoad());
+                .getMaxJobQuantityPerLoad());
         if (!isContinueList) {
             return timeoutRetryJobCounter;
         }
@@ -116,16 +113,16 @@ public class DefaultRetryJobLoader extends AbstractMachine implements RetryJobLo
     }
 
     private int loadUnprocessRetryJobs(int unprocessRetryJobCounter, int currentPage, int pageSize) {
-        List<RetryJob> retryJobs = retryService.listUnprocessRetryJobsByPage(retryConfig.getJobLoadInterval(),
+        List<RetryJob> retryJobs = retryService.listUnprocessRetryJobs(retryConfig.getJobLoadInterval(),
                 currentPage, pageSize);
-        if (retryJobs == null || retryJobs.isEmpty()) {
+        if (CollectionUtil.isEmpty(retryJobs)) {
             return unprocessRetryJobCounter;
         }
         addRetryJobsToRemoteRetryJobQueue(retryJobs);
         unprocessRetryJobCounter += retryJobs.size();
 
         boolean isContinueList = (retryJobs.size() == pageSize && (unprocessRetryJobCounter + pageSize) <= retryConfig
-                .getMaxJobAmountPerLoad());
+                .getMaxJobQuantityPerLoad());
         if (!isContinueList) {
             return unprocessRetryJobCounter;
         }
@@ -153,11 +150,11 @@ public class DefaultRetryJobLoader extends AbstractMachine implements RetryJobLo
 
     @Override
     public String getId() {
-        return null;
+        return getClass().getSimpleName();
     }
 
     @Override
     public String getGroup() {
-        return null;
+        return RetryConstants.COMPONENT_IDENTIFIER_JOB_LOADER;
     }
 }

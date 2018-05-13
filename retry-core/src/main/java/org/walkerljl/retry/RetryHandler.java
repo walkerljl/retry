@@ -1,18 +1,18 @@
 package org.walkerljl.retry;
 
-import org.walkerljl.retry.support.RetryContext;
+import org.walkerljl.retry.impl.RetryContext;
 
 /**
- * Retry handler
+ * 重试处理器
  *
  * @author xingxun
  */
 public interface RetryHandler {
 
     /**
-     * Do retry
+     * 重试
      *
-     * @param context Retry context
+     * @param context 重试上下文
      */
     void retry(RetryContext context);
 }

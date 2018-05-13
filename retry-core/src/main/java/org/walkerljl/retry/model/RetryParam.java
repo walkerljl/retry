@@ -6,7 +6,7 @@ import java.util.Map;
 import org.walkerljl.retry.model.enums.RetryParamStatusEnum;
 
 /**
- * Retry parameter.
+ * 重试参数
  *
  * @author xingxun
  */
@@ -14,24 +14,24 @@ public class RetryParam extends BaseEntity {
 
     private static final long serialVersionUID = -8640391014168493273L;
 
-    /** Retry job id*/
+    /** 重试任务ID*/
     private String               retryJobId;
-    /**  Parameter value*/
+    /** 参数值*/
     private String               value;
-    /** Extended information*/
-    private Map<String, String>  extInfo;
-    /** Reamrk*/
+    /** 扩展信息*/
+    private Map<String, Object>  extInfo;
+    /** 备注*/
     private String               remark;
-    /** Status*/
+    /** 状态*/
     private RetryParamStatusEnum status;
-    /** Creator*/
+    /** 创建者*/
     private String               creator;
-    /** Create time*/
-    private Date                 created;
-    /** Modifier*/
+    /** 创建时间*/
+    private Date                 createdTime;
+    /** 修改者*/
     private String               modifier;
-    /** Modified time*/
-    private Date                 modified;
+    /** 修改时间*/
+    private Date                 modifiedTime;
 
     /**
      * Getter method for property <tt>retryJobId</tt>.
@@ -74,7 +74,7 @@ public class RetryParam extends BaseEntity {
      *
      * @return property value of extInfo
      */
-    public Map<String, String> getExtInfo() {
+    public Map<String, Object> getExtInfo() {
         return extInfo;
     }
 
@@ -83,7 +83,7 @@ public class RetryParam extends BaseEntity {
      *
      * @param extInfo  value to be assigned to property extInfo
      */
-    public void setExtInfo(Map<String, String> extInfo) {
+    public void setExtInfo(Map<String, Object> extInfo) {
         this.extInfo = extInfo;
     }
 
@@ -142,21 +142,21 @@ public class RetryParam extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>created</tt>.
+     * Getter method for property <tt>createdTime</tt>.
      *
-     * @return property value of created
+     * @return property value of createdTime
      */
-    public Date getCreated() {
-        return created;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 
     /**
-     * Setter method for property <tt>created</tt>.
+     * Setter method for property <tt>createdTime</tt>.
      *
-     * @param created  value to be assigned to property created
+     * @param createdTime  value to be assigned to property createdTime
      */
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 
     /**
@@ -178,21 +178,21 @@ public class RetryParam extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>modified</tt>.
+     * Getter method for property <tt>modifiedTime</tt>.
      *
-     * @return property value of modified
+     * @return property value of modifiedTime
      */
-    public Date getModified() {
-        return modified;
+    public Date getModifiedTime() {
+        return modifiedTime;
     }
 
     /**
-     * Setter method for property <tt>modified</tt>.
+     * Setter method for property <tt>modifiedTime</tt>.
      *
-     * @param modified  value to be assigned to property modified
+     * @param modifiedTime  value to be assigned to property modifiedTime
      */
-    public void setModified(Date modified) {
-        this.modified = modified;
+    public void setModifiedTime(Date modifiedTime) {
+        this.modifiedTime = modifiedTime;
     }
 
     @Override

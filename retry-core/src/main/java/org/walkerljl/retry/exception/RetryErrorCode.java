@@ -1,7 +1,7 @@
 package org.walkerljl.retry.exception;
 
 /**
- * Retry error code
+ * 错误码
  *
  * @author xingxun
  * @Date 2017/10/22
@@ -9,14 +9,14 @@ package org.walkerljl.retry.exception;
 public enum RetryErrorCode implements ErrorCode {
 
     /**
-     * Unkown
+     * 未知异常
      */
-    UNKOWN("1", "unkown"),
+    UNKNOWN("unknown", "网络繁忙，轻稍后再试。"),
 
     /**
-     * Invalid of parameter
+     * 无效的参数
      */
-    INVALID_PARAM("2", "Invalid of parameter"),;
+    INVALID_PARAM("invalid_param", "无效的参数"),;
 
     /** Code*/
     private String code;

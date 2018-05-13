@@ -3,9 +3,8 @@ package org.walkerljl.retry.demo;
 import java.util.concurrent.CountDownLatch;
 
 import org.walkerljl.retry.demo.impl.defaults.DefaultLoggerRepository;
-import org.walkerljl.retry.log.logger.Logger;
-import org.walkerljl.retry.log.logger.LoggerFactory;
-import org.walkerljl.retry.log.logger.LoggerRepository;
+import org.walkerljl.retry.impl.log.logger.LoggerFactory;
+import org.walkerljl.retry.logger.LoggerRepository;
 
 /**
  * RetryBootstrap
@@ -14,7 +13,7 @@ import org.walkerljl.retry.log.logger.LoggerRepository;
  */
 public class RetryBootstrap {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RetryBootstrap.class);
+    //private static final Logger LOGGER = LoggerFactory.getLogger(RetryBootstrap.class);
 
     public static void main(String[] args) {
 
@@ -29,7 +28,7 @@ public class RetryBootstrap {
             countDownLatch.await();
         } catch (Exception e) {
             countDownLatch.countDown();
-            LOGGER.error(e);
+            //LOGGER.error(e);
         }
     }
 }

@@ -5,7 +5,7 @@ import java.util.Date;
 import org.walkerljl.retry.model.BaseEntity;
 
 /**
- * Parameter of lock retry job
+ * 锁定重试任务参数
  *
  * @author xingxun
  */
@@ -13,12 +13,14 @@ public class LockRetryJobParam extends BaseEntity {
 
     private static final long serialVersionUID = -740675484484440817L;
 
-    /** Retry job id*/
+    /** 重试任务ID*/
     private String retryJobId;
-    /** Last retry time*/
+    /** 重试超时时间*/
+    private Long   retryTimeout;
+    /** 上次重试时间*/
     private Date   lastRetryTime;
-    /** Modified time*/
-    private Date   modified;
+    /** 更新时间*/
+    private Date   modifiedTime;
 
     /**
      * Getter method for property <tt>retryJobId</tt>.
@@ -36,6 +38,24 @@ public class LockRetryJobParam extends BaseEntity {
      */
     public void setRetryJobId(String retryJobId) {
         this.retryJobId = retryJobId;
+    }
+
+    /**
+     * Getter method for property <tt>retryTimeout</tt>.
+     *
+     * @return property value of retryTimeout
+     */
+    public Long getRetryTimeout() {
+        return retryTimeout;
+    }
+
+    /**
+     * Setter method for property <tt>retryTimeout</tt>.
+     *
+     * @param retryTimeout  value to be assigned to property retryTimeout
+     */
+    public void setRetryTimeout(Long retryTimeout) {
+        this.retryTimeout = retryTimeout;
     }
 
     /**
@@ -57,21 +77,21 @@ public class LockRetryJobParam extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>modified</tt>.
+     * Getter method for property <tt>modifiedTime</tt>.
      *
-     * @return property value of modified
+     * @return property value of modifiedTime
      */
-    public Date getModified() {
-        return modified;
+    public Date getModifiedTime() {
+        return modifiedTime;
     }
 
     /**
-     * Setter method for property <tt>modified</tt>.
+     * Setter method for property <tt>modifiedTime</tt>.
      *
-     * @param modified  value to be assigned to property modified
+     * @param modifiedTime  value to be assigned to property modifiedTime
      */
-    public void setModified(Date modified) {
-        this.modified = modified;
+    public void setModifiedTime(Date modifiedTime) {
+        this.modifiedTime = modifiedTime;
     }
 
     @Override

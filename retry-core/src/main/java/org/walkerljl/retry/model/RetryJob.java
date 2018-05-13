@@ -8,7 +8,7 @@ import org.walkerljl.retry.model.enums.RetryJobStatusEnum;
 import org.walkerljl.retry.model.enums.RetryPriorityEnum;
 
 /**
- * Retry job
+ * 重试任务
  *
  * @author xingxun
  */
@@ -16,42 +16,42 @@ public class RetryJob extends BaseEntity {
 
     private static final long serialVersionUID = -6017516180911424002L;
 
-    /** ID*/
+    /** 任务ID*/
     private String              id;
-    /** Business type*/
+    /** 业务类型*/
     private String              bizType;
-    /** Business id*/
+    /** 业务ID*/
     private String              bizId;
-    /** Priority*/
+    /** 重试优先级*/
     private RetryPriorityEnum   priority;
-    /** Attempts*/
+    /** 重试次数*/
     private Integer             attempts;
-    /** Max attempts*/
+    /** 最大重试次数*/
     private Integer             maxAttempts;
-    /** Target identifier*/
+    /** 重试目标标识符*/
     private String              targetIdentifer;
-    /** Parameter list*/
+    /** 参数列表*/
     private List<RetryParam>    params;
-    /** Last retry time*/
+    /** 上次重试时间*/
     private Date                lastRetryTime;
-    /** Next retry time*/
+    /** 下次重试时间*/
     private Date                nextRetryTime;
-    /** Retry rule*/
+    /** 重试规则*/
     private String              retryRule;
-    /** Status*/
+    /** 状态*/
     private RetryJobStatusEnum  status;
-    /** Extend information*/
+    /** 扩展信息*/
     private Map<String, String> extInfo;
-    /** Remark*/
+    /** 备注*/
     private String              remark;
-    /** Creator*/
+    /** 创建者*/
     private String              creator;
-    /** Created time*/
-    private Date                created;
-    /** Modifier*/
+    /** 创建时间*/
+    private Date                createdTime;
+    /** 修改者*/
     private String              modifier;
-    /** Modified time*/
-    private Date                modified;
+    /** 修改时间*/
+    private Date                modifiedTime;
 
     /**
      * Constructor
@@ -329,21 +329,21 @@ public class RetryJob extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>created</tt>.
+     * Getter method for property <tt>createdTime</tt>.
      *
-     * @return property value of created
+     * @return property value of createdTime
      */
-    public Date getCreated() {
-        return created;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 
     /**
-     * Setter method for property <tt>created</tt>.
+     * Setter method for property <tt>createdTime</tt>.
      *
-     * @param created  value to be assigned to property created
+     * @param createdTime  value to be assigned to property createdTime
      */
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 
     /**
@@ -365,21 +365,21 @@ public class RetryJob extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>modified</tt>.
+     * Getter method for property <tt>modifiedTime</tt>.
      *
-     * @return property value of modified
+     * @return property value of modifiedTime
      */
-    public Date getModified() {
-        return modified;
+    public Date getModifiedTime() {
+        return modifiedTime;
     }
 
     /**
-     * Setter method for property <tt>modified</tt>.
+     * Setter method for property <tt>modifiedTime</tt>.
      *
-     * @param modified  value to be assigned to property modified
+     * @param modifiedTime  value to be assigned to property modifiedTime
      */
-    public void setModified(Date modified) {
-        this.modified = modified;
+    public void setModifiedTime(Date modifiedTime) {
+        this.modifiedTime = modifiedTime;
     }
 
     @Override

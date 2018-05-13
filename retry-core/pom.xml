@@ -18,6 +18,12 @@
     </properties>
 
     <dependencies>
+        <!-- fastjson begin-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <!-- fastjson end-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

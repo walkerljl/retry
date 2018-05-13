@@ -1,33 +1,32 @@
 package org.walkerljl.retry.model;
 
 import java.util.Date;
-import java.util.Map;
 
 import org.walkerljl.retry.model.enums.RetryLogStatusEnum;
 
 /**
- * Retry log
+ * 重试日志
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class RetryLog extends BaseEntity {
 
     private static final long serialVersionUID = -8074939915651656172L;
 
-    /** Retry job id*/
-    private String              retryJobId;
-    /** Attempts*/
-    private Integer             attempts;
-    /** Status*/
-    private RetryLogStatusEnum  status;
-    /** Description*/
-    private String              description;
-    /** Extend info*/
-    private Map<String, Object> extInfo;
-    /** Creator*/
-    private String              creator;
-    /** Created time*/
-    private Date                created;
+    /** 重试任务ID*/
+    private String             retryJobId;
+    /** 重试次数*/
+    private Integer            attempts;
+    /** 状态*/
+    private RetryLogStatusEnum status;
+    /** 描述*/
+    private String             description;
+    /** 备注*/
+    private String             remark;
+    /** 创建者*/
+    private String             creator;
+    /** 创建时间*/
+    private Date               createdTime;
 
     /**
      * Constructor
@@ -107,21 +106,21 @@ public class RetryLog extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>extInfo</tt>.
+     * Getter method for property <tt>remark</tt>.
      *
-     * @return property value of extInfo
+     * @return property value of remark
      */
-    public Map<String, Object> getExtInfo() {
-        return extInfo;
+    public String getRemark() {
+        return remark;
     }
 
     /**
-     * Setter method for property <tt>extInfo</tt>.
+     * Setter method for property <tt>remark</tt>.
      *
-     * @param extInfo  value to be assigned to property extInfo
+     * @param remark  value to be assigned to property remark
      */
-    public void setExtInfo(Map<String, Object> extInfo) {
-        this.extInfo = extInfo;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     /**
@@ -143,21 +142,21 @@ public class RetryLog extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>created</tt>.
+     * Getter method for property <tt>createdTime</tt>.
      *
-     * @return property value of created
+     * @return property value of createdTime
      */
-    public Date getCreated() {
-        return created;
+    public Date getCreatedTime() {
+        return createdTime;
     }
 
     /**
-     * Setter method for property <tt>created</tt>.
+     * Setter method for property <tt>createdTime</tt>.
      *
-     * @param created  value to be assigned to property created
+     * @param createdTime  value to be assigned to property createdTime
      */
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
     }
 
     @Override

@@ -1,26 +1,26 @@
 package org.walkerljl.retry.model.enums;
 
 /**
- * Retry priority
+ * 重试优先级
  *
  * @author xingxun
  */
 public enum RetryPriorityEnum implements IEnum {
 
     /**
-     * High
+     * 高
      */
-    HIGH("1", "high"),
+    HIGH("1", "高"),
 
     /**
-     * Normal
+     * 中
      */
-    NORMAL("2", "normal"),
+    NORMAL("2", "中"),
 
     /**
-     * Low
+     * 低
      */
-    LOW("3", "low"),;
+    LOW("3", "低"),;
 
     /** Code */
     private String code;

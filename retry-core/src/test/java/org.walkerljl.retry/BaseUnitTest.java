@@ -2,8 +2,8 @@ package org.walkerljl.retry;
 
 import org.junit.After;
 import org.junit.Before;
-import org.walkerljl.retry.log.logger.Logger;
-import org.walkerljl.retry.log.logger.LoggerFactory;
+import org.walkerljl.retry.logger.Logger;
+import org.walkerljl.retry.impl.log.logger.LoggerFactory;
 
 /**
  *

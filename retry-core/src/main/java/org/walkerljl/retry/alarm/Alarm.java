@@ -1,16 +1,16 @@
 package org.walkerljl.retry.alarm;
 
 /**
- * Alarm
+ * 警告器
  *
  * @author xingxun
  */
 public interface Alarm {
 
     /**
-     * Do alarm
+     * 报警
      *
-     * @param alarmInfo Alarm information
+     * @param alarmInfo 报警信息
      */
     void alarm(AlarmInfo alarmInfo);
 }

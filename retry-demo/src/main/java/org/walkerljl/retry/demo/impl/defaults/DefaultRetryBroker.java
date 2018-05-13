@@ -7,7 +7,7 @@ import org.walkerljl.retry.db.dao.daointerface.RetryParamDAO;
 import org.walkerljl.retry.db.dao.dataobject.RetryJobDO;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.RetryParam;
-import org.walkerljl.toolkit.lang.CollectionUtils;
+import org.walkerljl.retry.impl.util.CollectionUtil;
 
 /**
  * DefaultRetryBroker
@@ -26,15 +26,15 @@ public class DefaultRetryBroker implements RetryBroker {
 
     @Override
     public void submit(RetryJob retryJob) {
-        if (CollectionUtils.isEmpty(retryJob.getParams())) {
-            retryJobDAO.insert(ModelAndDOConverter.toRetryJobDO(retryJob));
+        if (CollectionUtil.isEmpty(retryJob.getParams())) {
+            retryJobDAO.save(ModelAndDOConverter.toRetryJobDO(retryJob));
         } else {
            RetryJobDO retryJobDO = ModelAndDOConverter.toRetryJobDO(retryJob);
-            retryJobDAO.insert(retryJobDO);
-            for (RetryParam retryParam : retryJob.getParams()) {
-                retryParam.setRetryJobId(String.valueOf(retryJobDO.getId()));
-                retryParamDAO.insert(ModelAndDOConverter.toRetryParamDO(retryParam));
-            }
+           retryJobDAO.save(retryJobDO);
+           for (RetryParam retryParam : retryJob.getParams()) {
+               retryParam.setRetryJobId(String.valueOf(retryJobDO.getId()));
+               retryParamDAO.save(ModelAndDOConverter.toRetryParamDO(retryParam));
+           }
         }
     }
 }
