@@ -18,7 +18,7 @@ public class ArrayUtil {
         StringBuilder sb = new StringBuilder();
         sb.append(objects[0]);
         for (int index = 1; index < objects.length; index++) {
-            sb.append(String.valueOf(objects[index])).append(separator);
+            sb.append(separator).append(String.valueOf(objects[index]));
         }
         return sb.toString();
     }

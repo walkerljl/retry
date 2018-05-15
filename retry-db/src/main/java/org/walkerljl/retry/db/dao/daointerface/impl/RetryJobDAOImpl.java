@@ -19,6 +19,53 @@ public class RetryJobDAOImpl extends BaseDAOImpl<RetryJobDO, Long> implements Re
         retryJobDO.setId(id);
     }
 
+    @Override
+    public int markToCompleted(Long id) {
+        /*
+        UPDATE retry_job SET status = 'processed', gmt_modified = NOW() WHERE id = 1133;
+         */
+        String sql = "UPDATE retry_job SET status = 'processed', gmt_modified = NOW() WHERE id = ?";
+        Object[] params = new Object[] {
+                id
+        };
+        return getExecutor().update(sql, params);
+    }
+
+    @Override
+    public int lock(String id, Long retryTimeout, Date lastRetryTime) {
+        /*
+        UPDATE
+            retry_job
+        SET
+            status = 'processing', attempts = attempts + 1, last_retry_time = NOW(), gmt_modified = NOW()
+        WHERE
+            id = 1133
+        AND
+            (status != 'processing' OR (status = 'processing' AND DATE_ADD(last_retry_time, INTERVAL 60 SECOND) <= NOW()));
+         */
+        String sql = "UPDATE retry_job SET status = 'processing', attempts = attempts + 1, last_retry_time = ?, gmt_modified = NOW() "
+                + " WHERE id = ? AND (status != 'processing'"
+                + " OR (status = 'processing' AND DATE_ADD(last_retry_time, INTERVAL ? SECOND) <= NOW()))";
+        Object[] params = new Object[] {
+                lastRetryTime,
+                id,
+                retryTimeout
+        };
+        return getExecutor().update(sql, params);
+    }
+
+    @Override
+    public int unlock(String id, String status, Date nextRetryTime) {
+        /*
+        UPDATE retry_job SET status = 'processed', next_retry_time = NOW(), gmt_modified = NOW() WHERE id = 1133;
+         */
+        String sql = "UPDATE retry_job SET status = ?, next_retry_time = ?, gmt_modified = NOW() WHERE id = ?";
+        Object[] params = new Object[] {status,
+                nextRetryTime,
+                id
+        };
+        return getExecutor().update(sql, params);
+    }
 
     @Override
     public RetryJobDO getById(String id) {
@@ -28,35 +75,27 @@ public class RetryJobDAOImpl extends BaseDAOImpl<RetryJobDO, Long> implements Re
     }
 
     @Override
-    public int lock(String retryJobId, Long retryTimeout, Date lastRetryTime, Date modifiedTime) {
-        String sql = "UPDATE retry_job SET status = 'processing', attempts = attempts + 1, last_retry_time = ?, gmt_modified = ? "
-                + "WHERE id = ? AND (status != 'processing'"
-                + " or (status = 'processing' and DATE_ADD(last_retry_time, INTERVAL ? SECOND) <= NOW()))";
-        Object[] params = new Object[] {
-                lastRetryTime,
-                modifiedTime,
-                retryJobId,
-                retryTimeout
-        };
-        return getExecutor().update(sql, params);
-    }
-
-    @Override
-    public int unlock(String retryJobId, String status, Date nextRetryTime, Date modifiedTime) {
-        String sql = "UPDATE retry_job SET status = ?, next_retry_time = ?, gmt_modified = ?"
-                + " WHERE id = ?";
-        Object[] params = new Object[] {status,
-                nextRetryTime,
-                modifiedTime,
-                retryJobId};
-        return getExecutor().update(sql, params);
-    }
-
-    @Override
     public List<RetryJobDO> listUnprocessRetryJobs(Long loadInterval, Integer currentPage, Integer pageSize) {
+        /*
+        SELECT
+            id,biz_type,biz_id,priority,target_identifier,attempts,max_attempts,retry_rule,last_retry_time,next_retry_time,ext_info,
+                remark,status,creator,gmt_create,modifier,gmt_modified
+        FROM
+            retry_job
+        WHERE
+            status = 'unprocess'
+        AND
+            attempts < max_attempts
+        AND
+            next_retry_time <= DATE_ADD(NOW(), INTERVAL 60 SECOND)
+        ORDER BY
+            priority ASC, gmt_create ASC
+        LIMIT
+            1, 10;
+         */
         String sql
                 = "SELECT * FROM retry_job WHERE status = 'unprocess' "
-                + " AND attempts <= max_attempts "
+                + " AND attempts < max_attempts "
                 + " AND next_retry_time <= DATE_ADD(NOW(), INTERVAL ? SECOND)"
                 + " ORDER BY priority ASC, gmt_create ASC "
                 + " LIMIT ?, ?";
@@ -66,9 +105,26 @@ public class RetryJobDAOImpl extends BaseDAOImpl<RetryJobDO, Long> implements Re
 
     @Override
     public List<RetryJobDO> listFailureRetryJobs(Long loadInterval, Integer currentPage, Integer pageSize) {
+        /*
+        SELECT
+            id,biz_type,biz_id,priority,target_identifier,attempts,max_attempts,retry_rule,last_retry_time,next_retry_time,ext_info,
+                remark,status,creator,gmt_create,modifier,gmt_modified
+        FROM
+            retry_job
+        WHERE
+            status = 'failure'
+        AND
+            attempts < max_attempts
+        AND
+            next_retry_time <= DATE_ADD(NOW(), INTERVAL 60 SECOND)
+        ORDER BY
+            priority ASC, gmt_create ASC
+        LIMIT
+            1, 10;
+         */
         String sql
                 = "SELECT * FROM retry_job WHERE status = 'failure' "
-                + " AND attempts <= max_attempts "
+                + " AND attempts < max_attempts "
                 + " AND next_retry_time <= DATE_ADD(NOW(), INTERVAL ? SECOND) "
                 + " ORDER BY priority ASC, gmt_create ASC "
                 + " LIMIT ?, ?";
@@ -78,9 +134,28 @@ public class RetryJobDAOImpl extends BaseDAOImpl<RetryJobDO, Long> implements Re
 
     @Override
     public List<RetryJobDO> listTimeoutRetryJobs(Long loadInterval, Long retryTimeout, Integer currentPage, Integer pageSize) {
+        /*
+        SELECT
+            id,biz_type,biz_id,priority,target_identifier,attempts,max_attempts,retry_rule,last_retry_time,next_retry_time,ext_info,
+                remark,status,creator,gmt_create,modifier,gmt_modified
+        FROM
+            retry_job
+        WHERE
+            status = 'processing'
+        AND
+            attempts < max_attempts
+        AND
+            next_retry_time <= DATE_ADD(NOW(), INTERVAL 60 SECOND)
+        AND
+            DATE_ADD(last_retry_time, INTERVAL 120 SECOND) <= NOW()
+        ORDER BY
+            priority ASC, gmt_create ASC
+        LIMIT
+            1, 10;
+         */
         String sql = "SELECT * FROM retry_job "
                 + " WHERE status = 'processing' "
-                + " AND attempts <= max_attempts "
+                + " AND attempts < max_attempts "
                 + " AND next_retry_time <= DATE_ADD(NOW(), INTERVAL ? SECOND) "
                 + " AND DATE_ADD(last_retry_time, INTERVAL ? SECOND) <= NOW() "
                 + " ORDER BY priority ASC, gmt_create ASC "

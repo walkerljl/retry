@@ -19,8 +19,6 @@ public class LockRetryJobParam extends BaseEntity {
     private Long   retryTimeout;
     /** 上次重试时间*/
     private Date   lastRetryTime;
-    /** 更新时间*/
-    private Date   modifiedTime;
 
     /**
      * Getter method for property <tt>retryJobId</tt>.
@@ -74,24 +72,6 @@ public class LockRetryJobParam extends BaseEntity {
      */
     public void setLastRetryTime(Date lastRetryTime) {
         this.lastRetryTime = lastRetryTime;
-    }
-
-    /**
-     * Getter method for property <tt>modifiedTime</tt>.
-     *
-     * @return property value of modifiedTime
-     */
-    public Date getModifiedTime() {
-        return modifiedTime;
-    }
-
-    /**
-     * Setter method for property <tt>modifiedTime</tt>.
-     *
-     * @param modifiedTime  value to be assigned to property modifiedTime
-     */
-    public void setModifiedTime(Date modifiedTime) {
-        this.modifiedTime = modifiedTime;
     }
 
     @Override

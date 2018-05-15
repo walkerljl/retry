@@ -15,9 +15,7 @@ public enum RetryParamStatusEnum implements IEnum {
     /**
      * 已删除
      */
-    DELETED("deleted", "已删除"),
-
-    ;
+    DELETED("deleted", "已删除"),;
 
     /** Code*/
     private String code;

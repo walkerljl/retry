@@ -35,7 +35,7 @@ public class DefaultAttributeAccessor implements AttributeAccessor, Serializable
 
     @Override
     public Object getAttribute(String name) {
-        AssertUtil.assertTrue(StringUtil.isNotEmpty(name), "name");
+        AssertUtil.assertParam(StringUtil.isNotEmpty(name), "name");
         return this.attributes.get(name);
     }
 

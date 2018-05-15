@@ -10,5 +10,4 @@ import org.walkerljl.retry.BaseUnitTest;
  */
 public class DefaultRetryJobDispatcherTest extends BaseUnitTest {
 
-
 }

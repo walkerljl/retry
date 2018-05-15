@@ -16,7 +16,7 @@ public class BaseDO extends BaseEntity {
 
     /** 主键ID*/
     @Column(value = "id", key = true)
-    private Long id;
+    private Long   id;
     /** 扩展信息*/
     @Column("ext_info")
     private String extInfo;

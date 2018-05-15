@@ -7,13 +7,13 @@ import org.walkerljl.retry.db.dao.dataobject.RetryJobDO;
 import org.walkerljl.retry.db.dao.dataobject.RetryLogDO;
 import org.walkerljl.retry.db.dao.dataobject.RetryParamDO;
 import org.walkerljl.retry.db.util.JSONUtil;
+import org.walkerljl.retry.impl.util.CollectionUtil;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.RetryLog;
 import org.walkerljl.retry.model.RetryParam;
 import org.walkerljl.retry.model.enums.RetryJobStatusEnum;
 import org.walkerljl.retry.model.enums.RetryParamStatusEnum;
 import org.walkerljl.retry.model.enums.RetryPriorityEnum;
-import org.walkerljl.retry.impl.util.CollectionUtil;
 
 /**
  * 核型领域模型、DO转换器
@@ -35,6 +35,7 @@ public class ModelAndDOConverter {
         RetryLogDO retryLogDO = new RetryLogDO();
         retryLogDO.setRetryJobId(retryLog.getRetryJobId());
         retryLogDO.setAttempts(retryLog.getAttempts());
+        retryLogDO.setDescription(retryLog.getDescription());
         retryLogDO.setStatus(retryLog.getStatus().getCode());
         retryLogDO.setCreator(retryLog.getCreator());
         retryLogDO.setCreatedTime(retryLog.getCreatedTime());

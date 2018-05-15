@@ -2,8 +2,10 @@ package org.walkerljl.retry.impl.util;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.walkerljl.retry.impl.RetryContext;
+import org.walkerljl.retry.impl.executor.RetryJobExecutorConfig;
 import org.walkerljl.retry.listener.RetryListener;
 import org.walkerljl.retry.model.RetryConfig;
 import org.walkerljl.retry.model.RetryJob;
@@ -84,5 +86,22 @@ public class RetryUtil {
 
     public static List<RetryListener> getListeners(RetryConfig retryConfig) {
         return retryConfig.getListeners();
+    }
+
+    public static RetryContext buildRetryContext(RetryJob retryJob, RetryConfig retryConfig) {
+        RetryContext retryContext = new RetryContext();
+        RetryJobExecutorConfig exectuorConfig = getExectuorConfig(retryConfig, retryJob);
+        retryContext.setAttribute(RetryContext.NAME, exectuorConfig.getName());
+        retryContext.setAttribute(RetryContext.EXECUTOR_ID, exectuorConfig.getId());
+        retryContext.setAttribute(RetryContext.EXECUTOR_CONFIG, exectuorConfig);
+        retryContext.setAttribute(RetryContext.RETRY_CONFIG, retryConfig);
+
+        return retryContext;
+    }
+
+    public static RetryJobExecutorConfig getExectuorConfig(RetryConfig retryConfig, RetryJob retryJob) {
+        Map<String, RetryJobExecutorConfig> exectuorConfig = retryConfig.getRetryJobExecutorConfigMap();
+        return exectuorConfig == null ? new RetryJobExecutorConfig() :
+                exectuorConfig.get(retryJob.getStatus().getCode());
     }
 }

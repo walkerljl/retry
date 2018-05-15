@@ -130,7 +130,6 @@ public class RetryLogDO extends BaseEntity {
         this.description = description;
     }
 
-
     /**
      * Getter method for property <tt>creator</tt>.
      *

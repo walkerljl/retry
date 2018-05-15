@@ -18,4 +18,8 @@ public class RetryContext extends DefaultAttributeAccessor implements AttributeA
     public static final String EXECUTOR_CONFIG = "context.executorConfig";
 
     public static final String RETRY_CONFIG = "context.retryConfig";
+
+    public static final String RETRY_THROABLE = "context.throable";
+
+    public static final String RETRY_EXECUTE_RESULT = "context.executeResult";
 }

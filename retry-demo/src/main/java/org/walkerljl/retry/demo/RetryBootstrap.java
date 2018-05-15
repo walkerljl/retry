@@ -2,9 +2,7 @@ package org.walkerljl.retry.demo;
 
 import java.util.concurrent.CountDownLatch;
 
-import org.walkerljl.retry.demo.impl.defaults.DefaultLoggerRepository;
-import org.walkerljl.retry.impl.log.logger.LoggerFactory;
-import org.walkerljl.retry.logger.LoggerRepository;
+import org.walkerljl.retry.RetryServer;
 
 /**
  * RetryBootstrap
@@ -13,22 +11,14 @@ import org.walkerljl.retry.logger.LoggerRepository;
  */
 public class RetryBootstrap {
 
-    //private static final Logger LOGGER = LoggerFactory.getLogger(RetryBootstrap.class);
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        try {
 
-            LoggerRepository loggerRepository = new DefaultLoggerRepository();
-            LoggerFactory.bindLoggerRepository(loggerRepository);
+        RetryServer retryServer = new DefaultRetryServer();
+        retryServer.init();
+        retryServer.start();
 
-            new RetryServer().start();
-
-            countDownLatch.await();
-        } catch (Exception e) {
-            countDownLatch.countDown();
-            //LOGGER.error(e);
-        }
+        countDownLatch.await();
     }
 }

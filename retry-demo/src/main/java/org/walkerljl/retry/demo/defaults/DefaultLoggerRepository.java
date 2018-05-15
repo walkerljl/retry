@@ -1,4 +1,4 @@
-package org.walkerljl.retry.demo.impl.defaults;
+package org.walkerljl.retry.demo.defaults;
 
 import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.logger.LoggerRepository;

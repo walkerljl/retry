@@ -3,23 +3,23 @@ package org.walkerljl.retry.impl.defaults;
 import java.util.List;
 
 import org.walkerljl.retry.RemoteRetryJobQueue;
-import org.walkerljl.retry.impl.RetryConstants;
 import org.walkerljl.retry.RetryService;
 import org.walkerljl.retry.exception.machine.CannotStartMachineException;
 import org.walkerljl.retry.exception.machine.CannotStopMachineException;
+import org.walkerljl.retry.impl.RetryConstants;
+import org.walkerljl.retry.impl.RetryJobLoader;
 import org.walkerljl.retry.impl.log.invocation.InvocationInfo;
-import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.impl.log.logger.LoggerFactory;
 import org.walkerljl.retry.impl.log.logger.LoggerNames;
 import org.walkerljl.retry.impl.log.util.LoggerDetailUtil;
 import org.walkerljl.retry.impl.log.util.LoggerDigestUtil;
 import org.walkerljl.retry.impl.log.util.LoggerUtil;
+import org.walkerljl.retry.impl.util.ArrayUtil;
+import org.walkerljl.retry.impl.util.CollectionUtil;
+import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.model.RetryConfig;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.standard.abstracts.AbstractMachine;
-import org.walkerljl.retry.impl.RetryJobLoader;
-import org.walkerljl.retry.impl.util.ArrayUtil;
-import org.walkerljl.retry.impl.util.CollectionUtil;
 
 /**
  * 默认的重试任务加载器
@@ -65,7 +65,8 @@ public class DefaultRetryJobLoader extends AbstractMachine implements RetryJobLo
             unprocessRetryJobCounter = loadUnprocessRetryJobs(unprocessRetryJobCounter, retryConfig.getJobLoadBeginPageNumber(), pageSize);
 
             invocationInfo.markResult(true,
-                    ArrayUtil.concat(",", new Integer[] {failureRetryJobCounter, timeoutRetryJobCounter, unprocessRetryJobCounter}), null);
+                    ArrayUtil.concat(",", new Integer[] {failureRetryJobCounter, timeoutRetryJobCounter, unprocessRetryJobCounter}),
+                    null);
         } catch (Throwable e) {
             invocationInfo.markFailure(e);
         } finally {
@@ -134,6 +135,9 @@ public class DefaultRetryJobLoader extends AbstractMachine implements RetryJobLo
             return;
         }
         for (RetryJob retryJob : retryJobs) {
+            if (retryJob == null) {
+                continue;
+            }
             remoteRetryJobQueue.addRetryJob(retryJob);
         }
     }

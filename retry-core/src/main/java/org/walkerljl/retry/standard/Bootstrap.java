@@ -2,9 +2,9 @@ package org.walkerljl.retry.standard;
 
 import org.walkerljl.retry.exception.machine.CannotStartMachineException;
 import org.walkerljl.retry.exception.machine.CannotStopMachineException;
-import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.impl.log.logger.LoggerFactory;
 import org.walkerljl.retry.impl.log.util.LoggerUtil;
+import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.standard.abstracts.AbstractMachine;
 
 /**

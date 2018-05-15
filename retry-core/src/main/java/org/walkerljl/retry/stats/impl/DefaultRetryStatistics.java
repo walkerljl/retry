@@ -18,7 +18,7 @@ import org.walkerljl.retry.stats.MutableRetryStatistics;
  */
 public class DefaultRetryStatistics extends BaseEntity implements MutableRetryStatistics {
 
-    private static final Logger RETRY_LOGGER = LoggerFactory.getLogger(LoggerNames.RETRY);
+    private static final Logger RETRY_LOGGER      = LoggerFactory.getLogger(LoggerNames.RETRY);
     private static final Logger STATISTICS_LOGGER = LoggerFactory.getLogger(LoggerNames.STATISTICS);
 
     private String name;
@@ -46,7 +46,7 @@ public class DefaultRetryStatistics extends BaseEntity implements MutableRetrySt
                     LoggerUtil.error(RETRY_LOGGER, e);
                 }
             }
-        },1000,1000 );
+        }, 1000, 5 * 1000);
     }
 
     @Override

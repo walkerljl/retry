@@ -3,10 +3,10 @@ package org.walkerljl.retry.impl.defaults;
 import java.util.concurrent.BlockingQueue;
 
 import org.walkerljl.retry.RemoteRetryJobQueue;
-import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.impl.log.logger.LoggerFactory;
 import org.walkerljl.retry.impl.log.logger.LoggerNames;
 import org.walkerljl.retry.impl.log.util.LoggerUtil;
+import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.model.RetryJob;
 
 /**

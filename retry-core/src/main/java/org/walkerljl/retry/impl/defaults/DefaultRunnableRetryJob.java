@@ -59,8 +59,6 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
             return;
         }
 
-        boolean isSuccess = false;
-        Throwable errorThroable = null;
         List<RetryListener> retryListeners = null;
         try {
             retryListeners = RetryUtil.getListeners(RetryUtil.getRetryConfig(retryContext));
@@ -81,7 +79,7 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
 
             //锁定重试任务
             boolean isLocked = lock();
-            if (isLocked) {
+            if (!isLocked) {
                 return;
             }
 
@@ -92,14 +90,15 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
             RetryListenerUtil.doOnCompletedInterceptors(retryListeners, retryContext, retryJob);
 
             //标注成功
-            isSuccess = true;
+            retryContext.setAttribute(RetryContext.RETRY_EXECUTE_RESULT, true);
         } catch (Exception e) {
-            errorThroable = e;
+            retryContext.setAttribute(RetryContext.RETRY_EXECUTE_RESULT, false);
+            retryContext.setAttribute(RetryContext.RETRY_THROABLE, e);
             //执行拦截器-执行错误
             RetryListenerUtil.doOnErrorInterceptors(retryListeners, retryContext, retryJob);
         } finally {
             //解锁重试任务并记录日志
-            unlockRetryJobAndRecordLog(retryJob, isSuccess, errorThroable);
+            unlockRetryJobAndRecordLog(retryContext, retryJob);
         }
     }
 
@@ -109,18 +108,12 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
      * @return
      */
     private boolean lock() {
-        boolean isLocked = false;
-        try {
-            isLocked = lockRetryJob(retryJob);
-            if (!isLocked) {
-                if (LOGGER.isInfoEnabled()) {
-                    LoggerUtil.info(LOGGER, String.format("[%s]Fail to lock the retry job.",
-                            RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId())));
-                }
+        boolean isLocked = lockRetryJob(retryJob);
+        if (!isLocked) {
+            if (LOGGER.isInfoEnabled()) {
+                LoggerUtil.info(LOGGER, String.format("[%s]Fail to lock the retry job.",
+                        RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId())));
             }
-        } catch (Exception e) {
-            LoggerUtil.error(LOGGER, e, String.format("[%s]Fail to lock the retry job.",
-                    RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId())));
         }
         return isLocked;
     }
@@ -145,14 +138,14 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
     /**
      * 解锁重试任务并记录日志
      *
+     * @param retryContext
      * @param retryJob
-     * @param isSuccess
-     * @param errorThroable
      */
-    private void unlockRetryJobAndRecordLog(RetryJob retryJob, boolean isSuccess, Throwable errorThroable) {
+    private void unlockRetryJobAndRecordLog(RetryContext retryContext, RetryJob retryJob) {
         if (retryJob == null) {
             return;
         }
+        boolean isSuccess = Boolean.valueOf(String.valueOf(retryContext.getAttribute(RetryContext.RETRY_EXECUTE_RESULT)));
         //释放重试任务
         try {
             boolean isUnlocked = unlockRetryJob(retryJob, isSuccess);
@@ -170,7 +163,7 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
 
         //记录重试日志
         try {
-            buildAndRecordRetryLog(retryJob, isSuccess, errorThroable);
+            buildAndRecordRetryLog(retryContext, retryJob, isSuccess);
         } catch (Exception e) {
             LoggerUtil.error(LOGGER, e, String.format("[%s]Fail to record execute log the retry job.",
                     RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId())));
@@ -195,18 +188,18 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
      * @return
      */
     private boolean lockRetryJob(RetryJob retryJob) {
-        LockRetryJobParam lockRetryJobParam = RetryObjectBuilder.buildLockRetryJobParam(retryJob);
+        LockRetryJobParam lockRetryJobParam = RetryObjectBuilder.buildLockRetryJobParam(RetryUtil.getRetryConfig(retryContext), retryJob);
         return retryService.lockRetryJob(lockRetryJobParam);
     }
 
     /**
      * 构建并记录重试日志
      *
-     * @param retryJob 重试任务
-     * @param isSuccess 是否成功
-     * @param e
+     * @param retryContext 重试上下文
+     * @param retryJob 是否成功
      */
-    private void buildAndRecordRetryLog(RetryJob retryJob, boolean isSuccess, Throwable e) {
+    private void buildAndRecordRetryLog(RetryContext retryContext, RetryJob retryJob, boolean isSuccess) {
+        Throwable e = (Throwable) retryContext.getAttribute(RetryContext.RETRY_THROABLE);
         String errorMsg = (e == null ? "" : e.getMessage());
         RetryLog retryLog = (isSuccess ? RetryObjectBuilder.buildSuccessRetryLog(retryJob)
                 : RetryObjectBuilder.buildFailureRetryLog(retryJob, errorMsg));

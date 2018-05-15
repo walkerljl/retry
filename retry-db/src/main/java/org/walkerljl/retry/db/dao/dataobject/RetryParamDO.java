@@ -15,10 +15,10 @@ public class RetryParamDO extends BaseDO {
 
     /** 重试任务ID*/
     @Column("retry_job_id")
-    private String              retryJobId;
+    private String retryJobId;
     /**  参数值*/
     @Column("value")
-    private String              value;
+    private String value;
 
     /**
      * Getter method for property <tt>retryJobId</tt>.

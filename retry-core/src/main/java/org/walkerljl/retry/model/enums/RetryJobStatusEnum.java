@@ -10,27 +10,27 @@ public enum RetryJobStatusEnum implements IEnum {
     /**
      * 未处理
      */
-    UNPROCESS("unprocess", "unprocess"),
+    UNPROCESS("unprocess", "未处理"),
 
     /**
      * 处理中
      */
-    PROCESSING("processing", "processing"),
+    PROCESSING("processing", "处理中"),
 
     /**
      * 已处理
      */
-    PROCESSED("processed", "processed"),
+    PROCESSED("processed", "已处理"),
 
     /**
      * 处理失败
      */
-    FAILURE("failure", "failure"),
+    FAILURE("failure", "处理失败"),
 
     /**
      * 已删除
      */
-    DELETED("deleted", "deleted"),;
+    DELETED("deleted", "已删除"),;
 
     /** Code*/
     private String code;

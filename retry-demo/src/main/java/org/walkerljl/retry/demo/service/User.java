@@ -1,4 +1,4 @@
-package org.walkerljl.retry.demo.test;
+package org.walkerljl.retry.demo.service;
 
 import java.io.Serializable;
 

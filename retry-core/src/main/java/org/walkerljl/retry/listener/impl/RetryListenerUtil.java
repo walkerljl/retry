@@ -25,11 +25,14 @@ public class RetryListenerUtil {
         if (CollectionUtil.isEmpty(retryListeners)) {
             return;
         }
-        for (RetryListener listener : retryListeners) {
+        for (RetryListener retryListener : retryListeners) {
+            if (retryListener == null) {
+                continue;
+            }
             try {
-                listener.onRunning(retryContext, retryJob);
+                retryListener.onRunning(retryContext, retryJob);
             } catch (Throwable e) {
-                LoggerUtil.error(LOGGER, e, buildLogContent(listener, retryJob, retryContext, e));
+                LoggerUtil.error(LOGGER, e, buildLogContent(retryListener, retryJob, retryContext, e));
             }
         }
     }
@@ -38,11 +41,14 @@ public class RetryListenerUtil {
         if (CollectionUtil.isEmpty(retryListeners)) {
             return;
         }
-        for (RetryListener listener : retryListeners) {
+        for (RetryListener retryListener : retryListeners) {
+            if (retryListener == null) {
+                continue;
+            }
             try {
-                listener.onCompleted(retryContext, retryJob);
+                retryListener.onCompleted(retryContext, retryJob);
             } catch (Throwable e) {
-                LoggerUtil.error(LOGGER, e, buildLogContent(listener, retryJob, retryContext, e));
+                LoggerUtil.error(LOGGER, e, buildLogContent(retryListener, retryJob, retryContext, e));
             }
         }
     }
@@ -53,11 +59,14 @@ public class RetryListenerUtil {
         if (CollectionUtil.isEmpty(retryListeners)) {
             return;
         }
-        for (RetryListener listener : retryListeners) {
+        for (RetryListener retryListener : retryListeners) {
+            if (retryListener == null) {
+                continue;
+            }
             try {
-                listener.onError(retryContext, retryJob);
+                retryListener.onError(retryContext, retryJob);
             } catch (Throwable e) {
-                LoggerUtil.error(LOGGER, e, buildLogContent(listener, retryJob, retryContext, e));
+                LoggerUtil.error(LOGGER, e, buildLogContent(retryListener, retryJob, retryContext, e));
             }
         }
     }
@@ -66,11 +75,14 @@ public class RetryListenerUtil {
         if (CollectionUtil.isEmpty(retryListeners)) {
             return;
         }
-        for (RetryListener listener : retryListeners) {
+        for (RetryListener retryListener : retryListeners) {
+            if (retryListener == null) {
+                continue;
+            }
             try {
-                listener.onAbort(retryContext, retryJob);
+                retryListener.onAbort(retryContext, retryJob);
             } catch (Throwable e) {
-                LoggerUtil.error(LOGGER, e, buildLogContent(listener, retryJob, retryContext, e));
+                LoggerUtil.error(LOGGER, e, buildLogContent(retryListener, retryJob, retryContext, e));
             }
         }
     }
@@ -84,6 +96,6 @@ public class RetryListenerUtil {
                 JSONUtil.toJSONString(retryListener),
                 JSONUtil.toJSONString(retryContext),
                 JSONUtil.toJSONString(retryJob)
-                );
+        );
     }
 }

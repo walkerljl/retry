@@ -46,10 +46,13 @@ public class RetryJobExecutorListener implements RetryListener {
     }
 
     private String buildDetailLogContent(String keyWord, RetryJob retryJob, RetryContext retryContext) {
-        String detailLogContent = String.format("[%s](%s)(%s)",
+        Throwable e = (Throwable)retryContext.getAttribute(RetryContext.RETRY_THROABLE);
+        String detailLogContent = String.format("[%s](%s)(%s)(throable:%s)",
                 keyWord,
                 JSONUtil.toJSONString(retryJob),
-                JSONUtil.toJSONString(retryContext));
+                JSONUtil.toJSONString(retryContext),
+                (e == null ? "" : e.getMessage())
+                );
         return detailLogContent;
     }
 

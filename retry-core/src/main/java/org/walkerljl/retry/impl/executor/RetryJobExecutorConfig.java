@@ -11,18 +11,21 @@ public class RetryJobExecutorConfig extends BaseEntity {
 
     private static final long serialVersionUID = -35957084533527965L;
 
+    private static final String DEFAULT_EXECUTOR_NAME = "default";
+    private static final String DEFAULT_EXECUTOR_ID   = "default";
+
     /** ID*/
-    private String id;
+    private       String id            = DEFAULT_EXECUTOR_NAME;
     /** 名称*/
-    private String name;
+    private       String name          = DEFAULT_EXECUTOR_ID;
     /** ThreadPoolExecutor config:workQueueSize*/
-    private       int workQueueSize = 1000;
+    private       int    workQueueSize = 1000;
     /**  ThreadPoolExecutor config:keepAliveTime */
-    private       int keepAliveTime = 60;
+    private       int    keepAliveTime = 60;
     /** ThreadPoolExecutor config:corePoolSize */
-    private final int corePoolSize  = 1;
+    private final int    corePoolSize  = 5;
     /** ThreadPoolExecutor config:maxPoolSize */
-    private       int maxPoolSize   = 10;
+    private       int    maxPoolSize   = 10;
 
     /**
      * Getter method for property <tt>id</tt>.

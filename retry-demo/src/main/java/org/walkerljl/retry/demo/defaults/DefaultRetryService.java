@@ -1,4 +1,4 @@
-package org.walkerljl.retry.demo.impl.defaults;
+package org.walkerljl.retry.demo.defaults;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import org.walkerljl.retry.model.param.UnlockRetryJobParam;
  */
 public class DefaultRetryService implements RetryService {
 
-    private RetryJobDAO retryJobDAO;
+    private RetryJobDAO   retryJobDAO;
     private RetryParamDAO retryParamDAO;
-    private RetryLogDAO retryLogDAO;
+    private RetryLogDAO   retryLogDAO;
 
     public DefaultRetryService(RetryJobDAO retryJobDAO, RetryParamDAO retryParamDAO,
                                RetryLogDAO retryLogDAO) {
@@ -47,15 +47,14 @@ public class DefaultRetryService implements RetryService {
     public boolean lockRetryJob(LockRetryJobParam lockRetryJobParam) {
         int count = retryJobDAO.lock(lockRetryJobParam.getRetryJobId(),
                 lockRetryJobParam.getRetryTimeout(),
-                lockRetryJobParam.getLastRetryTime(),
-                lockRetryJobParam.getModifiedTime());
+                lockRetryJobParam.getLastRetryTime());
         return count > 0;
     }
 
     @Override
     public boolean unlockRetryJob(UnlockRetryJobParam unlockRetryJobParam) {
         int count = retryJobDAO.unlock(unlockRetryJobParam.getRetryJobId(), unlockRetryJobParam.getStatus().getCode(),
-                unlockRetryJobParam.getNextRetryTime(), unlockRetryJobParam.getModifiedTime());
+                unlockRetryJobParam.getNextRetryTime());
         return count > 0;
     }
 

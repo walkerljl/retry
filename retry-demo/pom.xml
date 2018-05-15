@@ -12,10 +12,10 @@
     <artifactId>retry-demo</artifactId>
 
     <dependencies>
-    <dependency>
-        <groupId>org.walkerljl</groupId>
-        <artifactId>retry-db</artifactId>
-        <version>${project.parent.version}</version>
-    </dependency>
+        <dependency>
+            <groupId>org.walkerljl</groupId>
+            <artifactId>retry-db</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 </project>

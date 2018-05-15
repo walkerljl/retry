@@ -2,10 +2,10 @@ package org.walkerljl.retry.alarm.impl;
 
 import org.walkerljl.retry.alarm.Alarm;
 import org.walkerljl.retry.alarm.AlarmInfo;
-import org.walkerljl.retry.listener.RetryListener;
-import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.impl.RetryContext;
 import org.walkerljl.retry.impl.util.RetryUtil;
+import org.walkerljl.retry.listener.RetryListener;
+import org.walkerljl.retry.model.RetryJob;
 
 /**
  * 日志报警重试监听器
@@ -28,22 +28,24 @@ public class LoggerAlarmRetryListener implements RetryListener {
 
     @Override
     public void onError(RetryContext retryContext, RetryJob retryJob) {
-        alarm(retryJob);
+        alarm(retryContext, retryJob);
     }
 
     @Override
     public void onAbort(RetryContext retryContext, RetryJob retryJob) {
-        alarm(retryJob);
+        alarm(retryContext, retryJob);
     }
 
     /**
-     * Do alarm
+     * alarm
      *
-     * @param retryJob Retry job
+     * @param retryContext
+     * @param retryJob
      */
-    private void alarm(RetryJob retryJob) {
+    private void alarm(RetryContext retryContext, RetryJob retryJob) {
         String retryJobIdentifier = RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId());
-        AlarmInfo alarmInfo = new AlarmInfo(retryJobIdentifier, retryJob.toString());
+        Throwable e = (Throwable) retryContext.getAttribute(RetryContext.RETRY_THROABLE);
+        AlarmInfo alarmInfo = new AlarmInfo(retryJobIdentifier, (e == null ? "" : e.getMessage()));
         alarm.alarm(alarmInfo);
     }
 }

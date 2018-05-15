@@ -1,8 +1,8 @@
 package org.walkerljl.retry.stats;
 
+import org.walkerljl.retry.impl.RetryContext;
 import org.walkerljl.retry.listener.RetryListener;
 import org.walkerljl.retry.model.RetryJob;
-import org.walkerljl.retry.impl.RetryContext;
 
 /**
  * RetryStatisticsListener

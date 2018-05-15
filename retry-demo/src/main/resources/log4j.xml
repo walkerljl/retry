@@ -56,7 +56,7 @@
     </appender>
     <appender name="RETRY-JOB-DISPATCHER-DETAIL-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-dispatcher-detail.log"/>
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-dispatcher.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -79,7 +79,7 @@
     </appender>
     <appender name="RETRY-JOB-LOADER-DETAIL-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-loader-detail.log"/>
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-loader.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -102,7 +102,7 @@
     </appender>
     <appender name="RETRY-JOB-EXECUTOR-DETAIL-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-executor-detail.log"/>
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-executor.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">

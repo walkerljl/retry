@@ -4,9 +4,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.walkerljl.retry.impl.RunnableRetryJob;
 import org.walkerljl.retry.impl.executor.RetryJobExecutor;
 import org.walkerljl.retry.impl.executor.RetryJobExecutorConfig;
-import org.walkerljl.retry.impl.RunnableRetryJob;
 import org.walkerljl.retry.impl.util.NamedThreadFactory;
 
 /**
