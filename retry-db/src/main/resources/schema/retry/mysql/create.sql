@@ -51,7 +51,7 @@ ALTER TABLE `retry_param` ADD INDEX idx_retry_job_id(`retry_job_id`);
  */
 CREATE TABLE retry_log(
 	`id` BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '主键Id',
-	`retry_job_id` VARCHAR(128) NOT NULL COMMENT '重试任务ID',
+	`retry_job_id` BIGINT(20) NOT NULL COMMENT '重试任务ID',
 	`attempts` INT NOT NULL COMMENT '当前重试次数',
 	`status` VARCHAR(16) NOT NULL COMMENT '状态',
 	`description` VARCHAR(1024) DEFAULT '' COMMENT '描述',

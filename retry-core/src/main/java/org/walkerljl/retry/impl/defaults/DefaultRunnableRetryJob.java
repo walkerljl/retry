@@ -14,7 +14,7 @@ import org.walkerljl.retry.impl.log.util.LoggerUtil;
 import org.walkerljl.retry.impl.util.RetryObjectBuilder;
 import org.walkerljl.retry.impl.util.RetryUtil;
 import org.walkerljl.retry.listener.RetryListener;
-import org.walkerljl.retry.listener.impl.RetryListenerUtil;
+import org.walkerljl.retry.listener.impl.util.RetryListenerUtil;
 import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.RetryLog;
@@ -123,7 +123,7 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
      */
     private void process() {
         //查找重试Handler
-        RetryHandler retryHandler = RetryJobHandlerRepository.lookup(retryJob.getTargetIdentifer());
+        RetryHandler retryHandler = RetryJobHandlerRepository.lookup(retryJob.getTargetIdentifier());
         if (retryHandler == null) {
             throw new RetryException(String.format("[%s]No retry handler.",
                     RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId())));

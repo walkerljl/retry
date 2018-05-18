@@ -14,12 +14,14 @@ public class RetryParam extends BaseEntity {
 
     private static final long serialVersionUID = -8640391014168493273L;
 
+    /** ID*/
+    private String id;
     /** 重试任务ID*/
     private String               retryJobId;
     /** 参数值*/
     private String               value;
     /** 扩展信息*/
-    private Map<String, Object>  extInfo;
+    private Map<String, String>  extInfo;
     /** 备注*/
     private String               remark;
     /** 状态*/
@@ -32,6 +34,24 @@ public class RetryParam extends BaseEntity {
     private String               modifier;
     /** 修改时间*/
     private Date                 modifiedTime;
+
+    /**
+     * Getter method for property <tt>id</tt>.
+     *
+     * @return property value of id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Setter method for property <tt>id</tt>.
+     *
+     * @param id  value to be assigned to property id
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * Getter method for property <tt>retryJobId</tt>.
@@ -74,7 +94,7 @@ public class RetryParam extends BaseEntity {
      *
      * @return property value of extInfo
      */
-    public Map<String, Object> getExtInfo() {
+    public Map<String, String> getExtInfo() {
         return extInfo;
     }
 
@@ -83,7 +103,7 @@ public class RetryParam extends BaseEntity {
      *
      * @param extInfo  value to be assigned to property extInfo
      */
-    public void setExtInfo(Map<String, Object> extInfo) {
+    public void setExtInfo(Map<String, String> extInfo) {
         this.extInfo = extInfo;
     }
 

@@ -1,4 +1,4 @@
-package org.walkerljl.retry.listener.impl;
+package org.walkerljl.retry.listener.impl.util;
 
 import java.util.List;
 
@@ -21,8 +21,21 @@ public class RetryListenerUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggerNames.RETRY);
 
+    /**
+     * doOnRunningInterceptors
+     *
+     * @param retryListeners
+     * @param retryContext
+     * @param retryJob
+     */
     public static void doOnRunningInterceptors(List<RetryListener> retryListeners, RetryContext retryContext, RetryJob retryJob) {
         if (CollectionUtil.isEmpty(retryListeners)) {
+            return;
+        }
+        if (retryContext == null) {
+            return;
+        }
+        if (retryJob == null) {
             return;
         }
         for (RetryListener retryListener : retryListeners) {
@@ -37,8 +50,21 @@ public class RetryListenerUtil {
         }
     }
 
+    /**
+     * doOnCompletedInterceptors
+     *
+     * @param retryListeners
+     * @param retryContext
+     * @param retryJob
+     */
     public static void doOnCompletedInterceptors(List<RetryListener> retryListeners, RetryContext retryContext, RetryJob retryJob) {
         if (CollectionUtil.isEmpty(retryListeners)) {
+            return;
+        }
+        if (retryContext == null) {
+            return;
+        }
+        if (retryJob == null) {
             return;
         }
         for (RetryListener retryListener : retryListeners) {
@@ -53,10 +79,23 @@ public class RetryListenerUtil {
         }
     }
 
+    /**
+     * doOnErrorInterceptors
+     *
+     * @param retryListeners
+     * @param retryContext
+     * @param retryJob
+     */
     public static void doOnErrorInterceptors(List<RetryListener> retryListeners,
                                              RetryContext retryContext,
                                              RetryJob retryJob) {
         if (CollectionUtil.isEmpty(retryListeners)) {
+            return;
+        }
+        if (retryContext == null) {
+            return;
+        }
+        if (retryJob == null) {
             return;
         }
         for (RetryListener retryListener : retryListeners) {
@@ -71,8 +110,21 @@ public class RetryListenerUtil {
         }
     }
 
+    /**
+     * doOnAbortInterceptors
+     *
+     * @param retryListeners
+     * @param retryContext
+     * @param retryJob
+     */
     public static void doOnAbortInterceptors(List<RetryListener> retryListeners, RetryContext retryContext, RetryJob retryJob) {
         if (CollectionUtil.isEmpty(retryListeners)) {
+            return;
+        }
+        if (retryContext == null) {
+            return;
+        }
+        if (retryJob == null) {
             return;
         }
         for (RetryListener retryListener : retryListeners) {

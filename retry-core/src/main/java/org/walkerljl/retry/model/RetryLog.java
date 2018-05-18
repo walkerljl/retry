@@ -13,6 +13,8 @@ public class RetryLog extends BaseEntity {
 
     private static final long serialVersionUID = -8074939915651656172L;
 
+    /** ID*/
+    private String id;
     /** 重试任务ID*/
     private String             retryJobId;
     /** 重试次数*/
@@ -32,6 +34,24 @@ public class RetryLog extends BaseEntity {
      * Constructor
      */
     public RetryLog() {}
+
+    /**
+     * Getter method for property <tt>id</tt>.
+     *
+     * @return property value of id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Setter method for property <tt>id</tt>.
+     *
+     * @param id  value to be assigned to property id
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * Getter method for property <tt>retryJobId</tt>.

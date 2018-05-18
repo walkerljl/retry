@@ -2,8 +2,8 @@ package org.walkerljl.retry.alarm.impl;
 
 import org.walkerljl.retry.alarm.Alarm;
 import org.walkerljl.retry.alarm.AlarmInfo;
+import org.walkerljl.retry.alarm.impl.util.AlarmParamBuilder;
 import org.walkerljl.retry.impl.RetryContext;
-import org.walkerljl.retry.impl.util.RetryUtil;
 import org.walkerljl.retry.listener.RetryListener;
 import org.walkerljl.retry.model.RetryJob;
 
@@ -43,9 +43,7 @@ public class LoggerAlarmRetryListener implements RetryListener {
      * @param retryJob
      */
     private void alarm(RetryContext retryContext, RetryJob retryJob) {
-        String retryJobIdentifier = RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId());
-        Throwable e = (Throwable) retryContext.getAttribute(RetryContext.RETRY_THROABLE);
-        AlarmInfo alarmInfo = new AlarmInfo(retryJobIdentifier, (e == null ? "" : e.getMessage()));
+        AlarmInfo alarmInfo = AlarmParamBuilder.buildAlarmInfo(retryContext, retryJob);
         alarm.alarm(alarmInfo);
     }
 }

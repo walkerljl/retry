@@ -33,10 +33,6 @@
         </dependency>
         <dependency>
             <groupId>org.walkerljl</groupId>
-            <artifactId>toolkit-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.walkerljl</groupId>
             <artifactId>toolkit-db-core</artifactId>
         </dependency>
         <dependency>

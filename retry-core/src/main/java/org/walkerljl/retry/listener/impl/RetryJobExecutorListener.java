@@ -40,12 +40,36 @@ public class RetryJobExecutorListener implements RetryListener {
         doLog("Aborted", retryContext, retryJob);
     }
 
+    /**
+     * buildDigestLogContent
+     *
+     * @param keyWord
+     * @param retryJob
+     * @return
+     */
     private String buildDigestLogContent(String keyWord, RetryJob retryJob) {
+        if (retryJob == null) {
+            return null;
+        }
         String digestLogContent = String.format("[%s]%s", keyWord, RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId()));
         return digestLogContent;
     }
 
-    private String buildDetailLogContent(String keyWord, RetryJob retryJob, RetryContext retryContext) {
+    /**
+     * buildDetailLogContent
+     *
+     * @param keyWord
+     * @param retryContext
+     * @param retryJob
+     * @return
+     */
+    private String buildDetailLogContent(String keyWord, RetryContext retryContext, RetryJob retryJob) {
+        if (retryContext == null) {
+            return null;
+        }
+        if (retryJob == null) {
+            return null;
+        }
         Throwable e = (Throwable)retryContext.getAttribute(RetryContext.RETRY_THROABLE);
         String detailLogContent = String.format("[%s](%s)(%s)(throable:%s)",
                 keyWord,
@@ -56,13 +80,20 @@ public class RetryJobExecutorListener implements RetryListener {
         return detailLogContent;
     }
 
+    /**
+     * doLog
+     *
+     * @param keyWord
+     * @param retryContext
+     * @param retryJob
+     */
     private void doLog(String keyWord, RetryContext retryContext, RetryJob retryJob) {
         if (DIGEST_LOGGER.isInfoEnabled()) {
             String digestLogContent = buildDigestLogContent(keyWord, retryJob);
             LoggerUtil.info(DIGEST_LOGGER, digestLogContent);
         }
         if (DETAIL_LOGGER.isInfoEnabled()) {
-            String detailLogContent = buildDetailLogContent(keyWord, retryJob, retryContext);
+            String detailLogContent = buildDetailLogContent(keyWord, retryContext, retryJob);
             LoggerUtil.info(DETAIL_LOGGER, detailLogContent);
         }
     }

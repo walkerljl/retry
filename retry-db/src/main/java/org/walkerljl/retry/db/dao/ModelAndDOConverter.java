@@ -33,10 +33,12 @@ public class ModelAndDOConverter {
             return null;
         }
         RetryLogDO retryLogDO = new RetryLogDO();
+        retryLogDO.setId(retryLog.getId());
         retryLogDO.setRetryJobId(retryLog.getRetryJobId());
         retryLogDO.setAttempts(retryLog.getAttempts());
         retryLogDO.setDescription(retryLog.getDescription());
         retryLogDO.setStatus(retryLog.getStatus().getCode());
+        retryLogDO.setRemark(retryLog.getRemark());
         retryLogDO.setCreator(retryLog.getCreator());
         retryLogDO.setCreatedTime(retryLog.getCreatedTime());
         return retryLogDO;
@@ -52,9 +54,12 @@ public class ModelAndDOConverter {
         if (CollectionUtil.isEmpty(retryJobDOs)) {
             return null;
         }
-        List<RetryJob> retryJobs = new ArrayList<RetryJob>(retryJobDOs.size());
+        List<RetryJob> retryJobs = new ArrayList<>(retryJobDOs.size());
         for (RetryJobDO retryJobDO : retryJobDOs) {
-            retryJobs.add(toRetryJob(retryJobDO));
+            RetryJob retryJob = toRetryJob(retryJobDO);
+            if (retryJob != null) {
+                retryJobs.add(retryJob);
+            }
         }
         return retryJobs;
     }
@@ -75,7 +80,7 @@ public class ModelAndDOConverter {
         retryJob.setBizType(retryJobDO.getBizType());
         retryJob.setBizId(retryJobDO.getBizId());
         retryJob.setPriority(RetryPriorityEnum.getType(String.valueOf(retryJobDO.getPriority())));
-        retryJob.setTargetIdentifer(retryJobDO.getTargetIdentifier());
+        retryJob.setTargetIdentifier(retryJobDO.getTargetIdentifier());
         retryJob.setAttempts(retryJobDO.getAttempts());
         retryJob.setMaxAttempts(retryJobDO.getMaxAttempts());
         retryJob.setLastRetryTime(retryJobDO.getLastRetryTime());
@@ -104,16 +109,17 @@ public class ModelAndDOConverter {
         }
 
         RetryJobDO retryJobDO = new RetryJobDO();
+        retryJobDO.setId(Long.valueOf(retryJob.getId()));
         retryJobDO.setBizType(retryJob.getBizType());
         retryJobDO.setBizId(retryJob.getBizId());
         retryJobDO.setPriority(Integer.parseInt(retryJob.getPriority().getCode()));
-        retryJobDO.setTargetIdentifier(retryJob.getTargetIdentifer());
+        retryJobDO.setTargetIdentifier(retryJob.getTargetIdentifier());
         retryJobDO.setAttempts(retryJob.getAttempts());
         retryJobDO.setMaxAttempts(retryJob.getMaxAttempts());
         retryJobDO.setLastRetryTime(retryJob.getLastRetryTime());
         retryJobDO.setNextRetryTime(retryJob.getNextRetryTime());
         retryJobDO.setRetryRule(retryJob.getRetryRule());
-        retryJobDO.setExtInfo(JSONUtil.toJSONString(retryJobDO.getExtInfo()));
+        retryJobDO.setExtInfo(JSONUtil.toJSONString(retryJob.getExtInfo()));
         retryJobDO.setRemark(retryJob.getRemark());
         retryJobDO.setStatus(retryJob.getStatus().getCode());
         retryJobDO.setCreator(retryJob.getCreator());
@@ -136,8 +142,10 @@ public class ModelAndDOConverter {
         }
 
         RetryParam retryParam = new RetryParam();
+        retryParam.setId(String.valueOf(retryParamDO.getId()));
         retryParam.setRetryJobId(retryParamDO.getRetryJobId());
         retryParam.setValue(retryParamDO.getValue());
+        retryParam.setExtInfo(JSONUtil.parseMap(retryParamDO.getExtInfo()));
         retryParam.setRemark(retryParamDO.getRemark());
         retryParam.setStatus(RetryParamStatusEnum.getType(retryParamDO.getStatus()));
         retryParam.setCreator(retryParamDO.getCreator());
@@ -159,7 +167,10 @@ public class ModelAndDOConverter {
         }
         List<RetryParam> retryParams = new ArrayList<>(retryParamDOList.size());
         for (RetryParamDO retryParamDO : retryParamDOList) {
-            retryParams.add(toRetryParam(retryParamDO));
+            RetryParam retryParam = toRetryParam(retryParamDO);
+            if (retryParam != null) {
+                retryParams.add(retryParam);
+            }
         }
         return retryParams;
     }
@@ -176,8 +187,10 @@ public class ModelAndDOConverter {
         }
 
         RetryParamDO retryParamDO = new RetryParamDO();
+        retryParamDO.setId(Long.valueOf(retryParam.getId()));
         retryParamDO.setRetryJobId(retryParam.getRetryJobId());
-        retryParamDO.setValue(JSONUtil.toJSONString(retryParam.getValue()));
+        retryParamDO.setValue(retryParam.getValue());
+        retryParamDO.setExtInfo(JSONUtil.toJSONString(retryParam.getExtInfo()));
         retryParamDO.setRemark(retryParam.getRemark());
         retryParamDO.setStatus(retryParam.getStatus().getCode());
         retryParamDO.setCreator(retryParam.getCreator());

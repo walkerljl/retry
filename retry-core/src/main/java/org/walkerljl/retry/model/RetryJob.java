@@ -16,7 +16,7 @@ public class RetryJob extends BaseEntity {
 
     private static final long serialVersionUID = -6017516180911424002L;
 
-    /** 任务ID*/
+    /** ID*/
     private String              id;
     /** 业务类型*/
     private String              bizType;
@@ -29,7 +29,7 @@ public class RetryJob extends BaseEntity {
     /** 最大重试次数*/
     private Integer             maxAttempts;
     /** 重试目标标识符*/
-    private String              targetIdentifer;
+    private String              targetIdentifier;
     /** 参数列表*/
     private List<RetryParam>    params;
     /** 上次重试时间*/
@@ -167,21 +167,21 @@ public class RetryJob extends BaseEntity {
     }
 
     /**
-     * Getter method for property <tt>targetIdentifer</tt>.
+     * Getter method for property <tt>targetIdentifier</tt>.
      *
-     * @return property value of targetIdentifer
+     * @return property value of targetIdentifier
      */
-    public String getTargetIdentifer() {
-        return targetIdentifer;
+    public String getTargetIdentifier() {
+        return targetIdentifier;
     }
 
     /**
-     * Setter method for property <tt>targetIdentifer</tt>.
+     * Setter method for property <tt>targetIdentifier</tt>.
      *
-     * @param targetIdentifer  value to be assigned to property targetIdentifer
+     * @param targetIdentifier  value to be assigned to property targetIdentifier
      */
-    public void setTargetIdentifer(String targetIdentifer) {
-        this.targetIdentifer = targetIdentifer;
+    public void setTargetIdentifier(String targetIdentifier) {
+        this.targetIdentifier = targetIdentifier;
     }
 
     /**

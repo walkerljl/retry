@@ -31,6 +31,9 @@ public class RetryLogDO extends BaseEntity {
     /** 失败原因*/
     @Column("description")
     private String  description;
+    /** 备注*/
+    @Column("remark")
+    private String  remark;
     /** 创建者*/
     @Column("creator")
     private String  creator;
@@ -128,6 +131,24 @@ public class RetryLogDO extends BaseEntity {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Getter method for property <tt>remark</tt>.
+     *
+     * @return property value of remark
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * Setter method for property <tt>remark</tt>.
+     *
+     * @param remark  value to be assigned to property remark
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     /**
