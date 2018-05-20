@@ -1,7 +1,5 @@
 package org.walkerljl.retry.impl.util;
 
-import java.util.Date;
-
 import org.walkerljl.retry.model.RetryConfig;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.RetryLog;
@@ -10,6 +8,8 @@ import org.walkerljl.retry.model.enums.RetryLogStatusEnum;
 import org.walkerljl.retry.model.param.LockRetryJobParam;
 import org.walkerljl.retry.model.param.UnlockRetryJobParam;
 
+import java.util.Date;
+
 /**
  * RetryObjectBuilder
  *
@@ -17,6 +17,12 @@ import org.walkerljl.retry.model.param.UnlockRetryJobParam;
  */
 public class RetryObjectBuilder {
 
+    /**
+     * buildBaseRetryLog
+     *
+     * @param retryJob
+     * @return
+     */
     public static RetryLog buildBaseRetryLog(RetryJob retryJob) {
         if (retryJob == null) {
             return null;
@@ -29,20 +35,30 @@ public class RetryObjectBuilder {
         return retryLog;
     }
 
+    /**
+     * buildFailureRetryLog
+     *
+     * @param retryJob
+     * @param errorMsg
+     * @return
+     */
     public static RetryLog buildFailureRetryLog(RetryJob retryJob, String errorMsg) {
-        if (retryJob == null) {
+        RetryLog retryLog = buildBaseRetryLog(retryJob);
+        if (retryLog == null) {
             return null;
         }
-        RetryLog retryLog = buildBaseRetryLog(retryJob);
         retryLog.setStatus(RetryLogStatusEnum.FAILURE);
         retryLog.setDescription(errorMsg);
         return retryLog;
     }
 
+    /**
+     * buildSuccessRetryLog
+     *
+     * @param retryJob
+     * @return
+     */
     public static RetryLog buildSuccessRetryLog(RetryJob retryJob) {
-        if (retryJob == null) {
-            return null;
-        }
         RetryLog retryLog = buildBaseRetryLog(retryJob);
         if (retryLog == null) {
             return null;
@@ -51,6 +67,13 @@ public class RetryObjectBuilder {
         return retryLog;
     }
 
+    /**
+     * buildLockRetryJobParam
+     *
+     * @param retryConfig
+     * @param retryJob
+     * @return
+     */
     public static LockRetryJobParam buildLockRetryJobParam(RetryConfig retryConfig, RetryJob retryJob) {
         if (retryJob == null) {
             return null;
@@ -66,6 +89,13 @@ public class RetryObjectBuilder {
         return lockRetryJobParam;
     }
 
+    /**
+     * buildUnlockRetryJobParam
+     *
+     * @param retryJob
+     * @param isSuccess
+     * @return
+     */
     public static UnlockRetryJobParam buildUnlockRetryJobParam(RetryJob retryJob, boolean isSuccess) {
         if (retryJob == null) {
             return null;
@@ -75,8 +105,7 @@ public class RetryObjectBuilder {
         unlockRetryJobParam.setRetryJobId(retryJob.getId());
         unlockRetryJobParam.setStatus((isSuccess ? RetryJobStatusEnum.PROCESSED
                 : RetryJobStatusEnum.FAILURE));
-        Date nextRetryTime = RetryIntervalCalculator.calculateNextRetryTime(retryJob.getLastRetryTime(),
-                retryJob.getRetryRule(), retryJob.getAttempts() + 1);
+        Date nextRetryTime = RetryIntervalCalculator.calculateNextRetryTime(retryJob.getRetryRule(), retryJob.getAttempts() + 1);
         unlockRetryJobParam.setNextRetryTime(nextRetryTime);
         return unlockRetryJobParam;
     }

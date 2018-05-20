@@ -33,7 +33,6 @@ public class ModelAndDOConverter {
             return null;
         }
         RetryLogDO retryLogDO = new RetryLogDO();
-        retryLogDO.setId(retryLog.getId());
         retryLogDO.setRetryJobId(retryLog.getRetryJobId());
         retryLogDO.setAttempts(retryLog.getAttempts());
         retryLogDO.setDescription(retryLog.getDescription());
@@ -109,7 +108,6 @@ public class ModelAndDOConverter {
         }
 
         RetryJobDO retryJobDO = new RetryJobDO();
-        retryJobDO.setId(Long.valueOf(retryJob.getId()));
         retryJobDO.setBizType(retryJob.getBizType());
         retryJobDO.setBizId(retryJob.getBizId());
         retryJobDO.setPriority(Integer.parseInt(retryJob.getPriority().getCode()));
@@ -187,7 +185,6 @@ public class ModelAndDOConverter {
         }
 
         RetryParamDO retryParamDO = new RetryParamDO();
-        retryParamDO.setId(Long.valueOf(retryParam.getId()));
         retryParamDO.setRetryJobId(retryParam.getRetryJobId());
         retryParamDO.setValue(retryParam.getValue());
         retryParamDO.setExtInfo(JSONUtil.toJSONString(retryParam.getExtInfo()));

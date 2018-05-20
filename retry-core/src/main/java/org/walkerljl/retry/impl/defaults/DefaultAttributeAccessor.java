@@ -4,13 +4,13 @@
  */
 package org.walkerljl.retry.impl.defaults;
 
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.walkerljl.retry.impl.AttributeAccessor;
 import org.walkerljl.retry.impl.util.AssertUtil;
 import org.walkerljl.retry.impl.util.StringUtil;
+
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * DefaultAttributeAccessor
@@ -59,12 +59,9 @@ public class DefaultAttributeAccessor implements AttributeAccessor, Serializable
     @Override
     public void copy(AttributeAccessor source) {
         AssertUtil.assertParam(source != null, "source");
-        String[] attributeNames = source.attributeNames();
-        String[] var3 = attributeNames;
-        int var4 = attributeNames.length;
-
-        for (int var5 = 0; var5 < var4; ++var5) {
-            String attributeName = var3[var5];
+        String[] sourceAttributeNames = source.attributeNames();
+        for (int index = 0; index < sourceAttributeNames.length; index ++) {
+            String attributeName = sourceAttributeNames[index];
             this.setAttribute(attributeName, source.getAttribute(attributeName));
         }
     }

@@ -10,36 +10,57 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NamedThreadFactory implements ThreadFactory {
 
+    /** 分隔符*/
+    private static final String SEPARATOR = "-";
+    /** 默认的线程池前缀*/
+    private static final String DEFAULT_PREFIX = "pool";
+    /** 关键字：thread*/
+    private static final String KEY_THREAD = "thread";
+    /** 线程池序列号*/
     private static final AtomicInteger POOL_SEQ   = new AtomicInteger(1);
-    private final        AtomicInteger mThreadNum = new AtomicInteger(1);
-    private final String      mPrefix;
-    private final boolean     mDaemo;
-    private final ThreadGroup mGroup;
+    /** 线程数*/
+    private final        AtomicInteger threadNum = new AtomicInteger(1);
+    /** 线程池名称前缀*/
+    private final String      prefix;
+    /** 是否守护线程*/
+    private final boolean     daemon;
+    /** 线程组*/
+    private final ThreadGroup group;
 
+    /**
+     * 构造函数
+     */
     public NamedThreadFactory() {
-        this("pool-" + POOL_SEQ.getAndIncrement(), false);
+        this(String.format("%s%s%s", DEFAULT_PREFIX, SEPARATOR, POOL_SEQ.getAndIncrement()), false);
     }
 
+    /**
+     * 构造函数
+     *
+     * @param prefix 线程池名称前缀
+     */
     public NamedThreadFactory(String prefix) {
         this(prefix, false);
     }
 
-    public NamedThreadFactory(String prefix, boolean daemo) {
-        mPrefix = prefix + "-thread-";
-        mDaemo = daemo;
-        SecurityManager s = System.getSecurityManager();
-        mGroup = (s == null) ? Thread.currentThread().getThreadGroup() : s.getThreadGroup();
+    /**
+     * 构造函数
+     *
+     * @param prefix 前缀
+     * @param isDaemon 是否守护线程，true：是，false：否
+     */
+    public NamedThreadFactory(String prefix, boolean isDaemon) {
+        this.prefix = String.format("%s%s%s%s", prefix, SEPARATOR, KEY_THREAD, SEPARATOR);
+        daemon = isDaemon;
+        SecurityManager securityManager = System.getSecurityManager();
+        group = (securityManager == null) ? Thread.currentThread().getThreadGroup() : securityManager.getThreadGroup();
     }
 
     @Override
     public Thread newThread(Runnable runnable) {
-        String name = mPrefix + mThreadNum.getAndIncrement();
-        Thread ret = new Thread(mGroup, runnable, name, 0);
-        ret.setDaemon(mDaemo);
-        return ret;
-    }
-
-    public ThreadGroup getThreadGroup() {
-        return mGroup;
+        String name = prefix + threadNum.getAndIncrement();
+        Thread thread = new Thread(group, runnable, name, 0);
+        thread.setDaemon(daemon);
+        return thread;
     }
 }

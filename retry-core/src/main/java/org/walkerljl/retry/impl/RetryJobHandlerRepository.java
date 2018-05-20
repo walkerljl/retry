@@ -1,13 +1,13 @@
 package org.walkerljl.retry.impl;
 
+import org.walkerljl.retry.RetryHandler;
+import org.walkerljl.retry.impl.util.AssertUtil;
+import org.walkerljl.retry.impl.util.StringUtil;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.walkerljl.retry.RetryHandler;
-import org.walkerljl.retry.impl.util.AssertUtil;
-import org.walkerljl.retry.impl.util.StringUtil;
 
 /**
  * RetryJobHandlerRepository
@@ -17,7 +17,7 @@ import org.walkerljl.retry.impl.util.StringUtil;
 public class RetryJobHandlerRepository {
 
     /** Repository*/
-    private static final Map<String, RetryHandler> REPOSITROY = new HashMap<String, RetryHandler>();
+    private static final Map<String, RetryHandler> REPOSITROY = new HashMap<String, RetryHandler>(0);
 
     /**
      * Register handler of retry job

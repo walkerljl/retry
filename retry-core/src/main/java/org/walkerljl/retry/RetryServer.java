@@ -1,7 +1,7 @@
 package org.walkerljl.retry;
 
 import org.walkerljl.retry.impl.RetryJobLoader;
-import org.walkerljl.retry.standard.Machine;
+import org.walkerljl.retry.standard.machine.Machine;
 
 /**
  * 重试服务器

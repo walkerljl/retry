@@ -17,5 +17,6 @@ public class LoggerNames {
     public static final String RETRY_JOB_LOADER_DETAIL     = "RETRY_JOB_LOADER_DETAIL";
     public static final String RETRY_JOB_DISPATCHER_DIGEST = "RETRY_JOB_DISPATCHER_DIGEST";
     public static final String RETRY_JOB_DISPATCHER_DETAIL = "RETRY_JOB_DISPATCHER_DETAIL";
-
+    public static final String RETRY_BROKER_DIGEST = "RETRY_BROKER_DIGEST";
+    public static final String RETRY_BROKER_DETAIL = "RETRY_BROKER_DETAIL";
 }

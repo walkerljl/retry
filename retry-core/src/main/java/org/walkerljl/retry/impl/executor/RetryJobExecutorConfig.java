@@ -11,8 +11,8 @@ public class RetryJobExecutorConfig extends BaseEntity {
 
     private static final long serialVersionUID = -35957084533527965L;
 
-    private static final String DEFAULT_EXECUTOR_NAME = "default";
-    private static final String DEFAULT_EXECUTOR_ID   = "default";
+    public static final String DEFAULT_EXECUTOR_NAME = "default";
+    public static final String DEFAULT_EXECUTOR_ID   = "default";
 
     /** ID*/
     private       String id            = DEFAULT_EXECUTOR_NAME;

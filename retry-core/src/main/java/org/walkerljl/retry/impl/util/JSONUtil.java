@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
+ * JSONUtil
  *
  * @author xingxun
  */

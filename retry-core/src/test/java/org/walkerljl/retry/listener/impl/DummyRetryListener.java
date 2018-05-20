@@ -5,6 +5,7 @@ import org.walkerljl.retry.listener.RetryListener;
 import org.walkerljl.retry.model.RetryJob;
 
 /**
+ * DummyRetryListener
  *
  * @author xingxun
  */

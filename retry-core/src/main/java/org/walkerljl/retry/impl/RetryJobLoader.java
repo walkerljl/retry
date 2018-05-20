@@ -1,7 +1,7 @@
 package org.walkerljl.retry.impl;
 
 import org.walkerljl.retry.RemoteRetryJobQueue;
-import org.walkerljl.retry.standard.Machine;
+import org.walkerljl.retry.standard.machine.Machine;
 
 /**
  * 重试任务加载器

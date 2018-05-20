@@ -43,10 +43,10 @@
         </layout>
     </appender>
 
-    <!-- RETRY-JOB-DISPATCHER APPENDER begin-->
-    <appender name="RETRY-JOB-DISPATCHER-DIGEST-APPENDER"
+    <!-- RETRY-BROKER APPENDER begin-->
+    <appender name="RETRY-BROKER-DIGEST-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-dispatcher-digest.log"/>
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-broker-digest.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -54,9 +54,9 @@
                    value="%d %-5p %c{2} - %m%n"/>
         </layout>
     </appender>
-    <appender name="RETRY-JOB-DISPATCHER-DETAIL-APPENDER"
+    <appender name="RETRY-BROKER-DETAIL-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-dispatcher.log"/>
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-broker.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -64,7 +64,7 @@
                    value="%d %-5p %c{2} - %m%n"/>
         </layout>
     </appender>
-    <!-- RETRY-JOB-DISPATCHER APPENDER end-->
+    <!-- RETRY-BROKER APPENDER end-->
 
     <!-- RETRY-JOB-LOADER APPENDER begin-->
     <appender name="RETRY-JOB-LOADER-DIGEST-APPENDER"
@@ -88,6 +88,29 @@
         </layout>
     </appender>
     <!-- RETRY-JOB-LOADER APPENDER end-->
+
+    <!-- RETRY-JOB-DISPATCHER APPENDER begin-->
+    <appender name="RETRY-JOB-DISPATCHER-DIGEST-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-dispatcher-digest.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <appender name="RETRY-JOB-DISPATCHER-DETAIL-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-job-dispatcher.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <!-- RETRY-JOB-DISPATCHER APPENDER end-->
 
     <!-- RETRY-JOB-EXECUTOR APPENDER begin-->
     <appender name="RETRY-JOB-EXECUTOR-DIGEST-APPENDER"
@@ -123,7 +146,7 @@
                    value="%d %-5p %c{2} - %m%n"/>
         </layout>
     </appender>
-    <!-- RETRY-SERVICE APPENDER end-->
+    <!-- RETRY APPENDER end-->
 
     <!-- RETRY-ALARM APPENDER begin-->
     <appender name="RETRY-ALARM-APPENDER"
@@ -174,6 +197,17 @@
         <level value="ERROR"/>
         <appender-ref ref="STDERR-APPENDER"/>
     </logger>
+
+    <!-- RetryBroker LOGGER begin-->
+    <logger name="RETRY_BROKER_DIGEST" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="RETRY-BROKER-DIGEST-APPENDER"/>
+    </logger>
+    <logger name="RETRY_BROKER_DETAIL" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="RETRY-BROKER-DETAIL-APPENDER"/>
+    </logger>
+    <!-- RetryBroker LOGGER end-->
 
     <!-- RetryJobLoader LOGGER begin-->
     <logger name="RETRY_JOB_LOADER_DIGEST" additivity="false">

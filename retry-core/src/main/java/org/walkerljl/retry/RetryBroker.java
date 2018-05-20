@@ -1,13 +1,14 @@
 package org.walkerljl.retry;
 
 import org.walkerljl.retry.model.RetryJob;
+import org.walkerljl.retry.standard.machine.Machine;
 
 /**
  * Retry broker
  *
  * @author xingxun
  */
-public interface RetryBroker {
+public interface RetryBroker extends Machine{
 
     /**
      * 提交一个重试任务

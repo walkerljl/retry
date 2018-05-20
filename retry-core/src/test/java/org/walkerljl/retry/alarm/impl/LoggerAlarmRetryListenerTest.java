@@ -6,15 +6,17 @@ import org.walkerljl.retry.impl.RetryContext;
 import org.walkerljl.retry.model.RetryJob;
 
 /**
+ * LoggerAlarmRetryListenerTest
  *
  * @author xingxun
  */
 public class LoggerAlarmRetryListenerTest extends BaseUnitTest {
 
-    private LoggerAlarmRetryListener loggerAlarmRetryListener = new LoggerAlarmRetryListener();
 
     @Test
     public void onRunning() {
+
+        LoggerAlarmRetryListener loggerAlarmRetryListener = new LoggerAlarmRetryListener();
 
         RetryContext retryContext = new RetryContext();
         RetryJob retryJob = new RetryJob();
@@ -26,6 +28,9 @@ public class LoggerAlarmRetryListenerTest extends BaseUnitTest {
 
     @Test
     public void onCompleted() {
+
+        LoggerAlarmRetryListener loggerAlarmRetryListener = new LoggerAlarmRetryListener();
+
         RetryContext retryContext = new RetryContext();
         RetryJob retryJob = new RetryJob();
         loggerAlarmRetryListener.onCompleted(null, retryJob);
@@ -36,6 +41,9 @@ public class LoggerAlarmRetryListenerTest extends BaseUnitTest {
 
     @Test
     public void onError() {
+
+        LoggerAlarmRetryListener loggerAlarmRetryListener = new LoggerAlarmRetryListener();
+
         RetryContext retryContext = new RetryContext();
         RetryJob retryJob = new RetryJob();
         loggerAlarmRetryListener.onError(null, retryJob);
@@ -46,6 +54,9 @@ public class LoggerAlarmRetryListenerTest extends BaseUnitTest {
 
     @Test
     public void onAbort() {
+
+        LoggerAlarmRetryListener loggerAlarmRetryListener = new LoggerAlarmRetryListener();
+
         RetryContext retryContext = new RetryContext();
         RetryJob retryJob = new RetryJob();
         loggerAlarmRetryListener.onError(null, retryJob);

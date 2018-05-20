@@ -1,15 +1,18 @@
 package org.walkerljl.retry.impl.util;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import org.walkerljl.retry.RemoteRetryJobQueue;
+import org.walkerljl.retry.RetryService;
+import org.walkerljl.retry.impl.RetryConstants;
 import org.walkerljl.retry.impl.RetryContext;
 import org.walkerljl.retry.impl.executor.RetryJobExecutorConfig;
 import org.walkerljl.retry.listener.RetryListener;
 import org.walkerljl.retry.model.RetryConfig;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.enums.RetryJobStatusEnum;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Retry util
@@ -80,15 +83,40 @@ public class RetryUtil {
         return false;
     }
 
+    /**
+     * getRetryConfig
+     *
+     * @param retryContext
+     * @return
+     */
     public static RetryConfig getRetryConfig(RetryContext retryContext) {
-        return (RetryConfig) retryContext.getAttribute(RetryContext.RETRY_CONFIG);
+        return retryContext == null ? null : (RetryConfig) retryContext.getAttribute(RetryContext.RETRY_CONFIG);
     }
 
+    /**
+     * getListeners
+     *
+     * @param retryConfig
+     * @return
+     */
     public static List<RetryListener> getListeners(RetryConfig retryConfig) {
-        return retryConfig.getListeners();
+        return retryConfig == null ? null : retryConfig.getListeners();
     }
 
-    public static RetryContext buildRetryContext(RetryJob retryJob, RetryConfig retryConfig) {
+    /**
+     * buildRetryContext
+     *
+     * @param retryConfig
+     * @param retryJob
+     * @return
+     */
+    public static RetryContext buildRetryContext(RetryConfig retryConfig, RetryJob retryJob) {
+        if (retryConfig == null) {
+            return null;
+        }
+        if (retryJob == null) {
+            return null;
+        }
         RetryContext retryContext = new RetryContext();
         RetryJobExecutorConfig exectuorConfig = getExectuorConfig(retryConfig, retryJob);
         retryContext.setAttribute(RetryContext.NAME, exectuorConfig.getName());
@@ -99,9 +127,111 @@ public class RetryUtil {
         return retryContext;
     }
 
+    /**
+     * getExectuorConfig
+     *
+     * @param retryConfig
+     * @param retryJob
+     * @return
+     */
     public static RetryJobExecutorConfig getExectuorConfig(RetryConfig retryConfig, RetryJob retryJob) {
-        Map<String, RetryJobExecutorConfig> exectuorConfig = retryConfig.getRetryJobExecutorConfigMap();
-        return exectuorConfig == null ? new RetryJobExecutorConfig() :
+        Map<String, RetryJobExecutorConfig> exectuorConfig = retryConfig == null ? null : retryConfig.getRetryJobExecutorConfigMap();
+        return retryJob == null ? new RetryJobExecutorConfig() :
                 exectuorConfig.get(retryJob.getStatus().getCode());
+    }
+
+    public static void addRetryJobsToRemoteRetryJobQueue(List<RetryJob> retryJobs, RemoteRetryJobQueue remoteRetryJobQueue) {
+        if (CollectionUtil.isEmpty(retryJobs)) {
+            return;
+        }
+        if (remoteRetryJobQueue == null) {
+            return;
+        }
+        for (RetryJob retryJob : retryJobs) {
+            if (retryJob == null) {
+                continue;
+            }
+            remoteRetryJobQueue.addRetryJob(retryJob);
+        }
+    }
+
+    public static int loadFailureRetryJobs(RetryService retryService,
+                                           RetryConfig retryConfig,
+                                           RemoteRetryJobQueue remoteRetryJobQueue,
+                                           int failureRetryJobCounter,
+                                           int currentPage,
+                                           int pageSize) {
+        List<RetryJob> retryJobs = retryService.listFailureRetryJobs(retryConfig.getJobLoadInterval(), currentPage, pageSize);
+        if (CollectionUtil.isEmpty(retryJobs)) {
+            return failureRetryJobCounter;
+        }
+        RetryUtil.addRetryJobsToRemoteRetryJobQueue(retryJobs, remoteRetryJobQueue);
+        failureRetryJobCounter += retryJobs.size();
+
+        boolean isContinueList = (retryJobs.size() == pageSize && (failureRetryJobCounter + pageSize) <= retryConfig
+                .getMaxJobQuantityPerLoad());
+        if (!isContinueList) {
+            return failureRetryJobCounter;
+        }
+        return loadFailureRetryJobs(retryService,
+                retryConfig,
+                remoteRetryJobQueue,
+                failureRetryJobCounter,
+                currentPage + RetryConstants.LOAD_PAGE_STEP, pageSize);
+    }
+
+    public static int loadTimeoutRetryJobs(RetryService retryService,
+                                     RetryConfig retryConfig,
+                                     RemoteRetryJobQueue remoteRetryJobQueue,
+                                     int timeoutRetryJobCounter,
+                                     int currentPage,
+                                     int pageSize) {
+        List<RetryJob> retryJobs = retryService.listTimeoutRetryJobs(retryConfig.getJobLoadInterval(),
+                retryConfig.getJobRetryTimeout(),
+                currentPage, pageSize);
+        if (CollectionUtil.isEmpty(retryJobs)) {
+            return timeoutRetryJobCounter;
+        }
+        RetryUtil.addRetryJobsToRemoteRetryJobQueue(retryJobs, remoteRetryJobQueue);
+        timeoutRetryJobCounter += retryJobs.size();
+
+        boolean isContinueList = (retryJobs.size() == pageSize && (timeoutRetryJobCounter + pageSize) <= retryConfig
+                .getMaxJobQuantityPerLoad());
+        if (!isContinueList) {
+            return timeoutRetryJobCounter;
+        }
+        return loadTimeoutRetryJobs(retryService,
+                retryConfig,
+                remoteRetryJobQueue,
+                timeoutRetryJobCounter,
+                currentPage + RetryConstants.LOAD_PAGE_STEP,
+                pageSize);
+    }
+
+    public static int loadUnprocessRetryJobs(RetryService retryService,
+                                       RetryConfig retryConfig,
+                                       RemoteRetryJobQueue remoteRetryJobQueue,
+                                       int unprocessRetryJobCounter,
+                                       int currentPage,
+                                       int pageSize) {
+        List<RetryJob> retryJobs = retryService.listUnprocessRetryJobs(retryConfig.getJobLoadInterval(),
+                currentPage, pageSize);
+        if (CollectionUtil.isEmpty(retryJobs)) {
+            return unprocessRetryJobCounter;
+        }
+        RetryUtil.addRetryJobsToRemoteRetryJobQueue(retryJobs, remoteRetryJobQueue);
+        unprocessRetryJobCounter += retryJobs.size();
+
+        boolean isContinueList = (retryJobs.size() == pageSize && (unprocessRetryJobCounter + pageSize) <= retryConfig
+                .getMaxJobQuantityPerLoad());
+        if (!isContinueList) {
+            return unprocessRetryJobCounter;
+        }
+        return loadUnprocessRetryJobs(retryService,
+                retryConfig,
+                remoteRetryJobQueue,
+                unprocessRetryJobCounter,
+                currentPage + RetryConstants.LOAD_PAGE_STEP,
+                pageSize);
     }
 }

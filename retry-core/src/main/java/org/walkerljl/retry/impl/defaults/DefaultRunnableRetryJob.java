@@ -1,7 +1,5 @@
 package org.walkerljl.retry.impl.defaults;
 
-import java.util.List;
-
 import org.walkerljl.retry.RetryHandler;
 import org.walkerljl.retry.RetryService;
 import org.walkerljl.retry.exception.RetryException;
@@ -20,6 +18,8 @@ import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.RetryLog;
 import org.walkerljl.retry.model.param.LockRetryJobParam;
 import org.walkerljl.retry.model.param.UnlockRetryJobParam;
+
+import java.util.List;
 
 /**
  *  默认可执行的重试任务
@@ -108,8 +108,14 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
      * @return
      */
     private boolean lock() {
-        boolean isLocked = lockRetryJob(retryJob);
-        if (!isLocked) {
+        LockRetryJobParam lockRetryJobParam = RetryObjectBuilder.buildLockRetryJobParam(RetryUtil.getRetryConfig(retryContext), retryJob);
+        boolean isLocked = retryService.lockRetryJob(lockRetryJobParam);
+        if (isLocked) {
+            //更新上次执行时间
+            retryJob.setLastRetryTime(lockRetryJobParam.getLastRetryTime());
+            //更新重试次数
+            retryJob.setAttempts(retryJob.getAttempts() + 1);
+        } else {
             if (LOGGER.isInfoEnabled()) {
                 LoggerUtil.info(LOGGER, String.format("[%s]Fail to lock the retry job.",
                         RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId())));
@@ -179,17 +185,6 @@ public class DefaultRunnableRetryJob implements RunnableRetryJob {
     private boolean unlockRetryJob(RetryJob retryJob, boolean isSuccess) {
         UnlockRetryJobParam unlockRetryJobParam = RetryObjectBuilder.buildUnlockRetryJobParam(retryJob, isSuccess);
         return retryService.unlockRetryJob(unlockRetryJobParam);
-    }
-
-    /**
-     * 锁定重试任务
-     *
-     * @param retryJob 重试任务
-     * @return
-     */
-    private boolean lockRetryJob(RetryJob retryJob) {
-        LockRetryJobParam lockRetryJobParam = RetryObjectBuilder.buildLockRetryJobParam(RetryUtil.getRetryConfig(retryContext), retryJob);
-        return retryService.lockRetryJob(lockRetryJobParam);
     }
 
     /**

@@ -1,13 +1,14 @@
 package org.walkerljl.retry.impl.executor;
 
 import org.walkerljl.retry.impl.RunnableRetryJob;
+import org.walkerljl.retry.standard.machine.Machine;
 
 /**
  * 重试任务执行器
  *
  * @author xingxun
  */
-public interface RetryJobExecutor {
+public interface RetryJobExecutor extends Machine {
 
     /**
      * 执行重试任务

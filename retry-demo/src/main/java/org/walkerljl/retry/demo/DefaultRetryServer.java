@@ -1,22 +1,9 @@
 package org.walkerljl.retry.demo;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.walkerljl.configuration.client.ConfiguratorFactory;
 import org.walkerljl.configuration.client.impl.readonly.PropertiesConfiguratorProvider;
-import org.walkerljl.retry.RemoteRetryJobQueue;
-import org.walkerljl.retry.RetryBroker;
-import org.walkerljl.retry.RetryJobDispatcher;
-import org.walkerljl.retry.RetryServer;
-import org.walkerljl.retry.RetryService;
+import org.walkerljl.retry.*;
+import org.walkerljl.retry.abstracts.AbstractRetryServer;
 import org.walkerljl.retry.db.dao.daointerface.RetryJobDAO;
 import org.walkerljl.retry.db.dao.daointerface.RetryLogDAO;
 import org.walkerljl.retry.db.dao.daointerface.RetryParamDAO;
@@ -29,11 +16,6 @@ import org.walkerljl.retry.demo.defaults.DefaultRetryBroker;
 import org.walkerljl.retry.demo.defaults.DefaultRetryService;
 import org.walkerljl.retry.demo.service.User;
 import org.walkerljl.retry.demo.service.impl.retry.SyncUserInfoRetryHandler;
-import org.walkerljl.retry.exception.machine.CannotStartMachineException;
-import org.walkerljl.retry.exception.machine.CannotStopMachineException;
-import org.walkerljl.retry.exception.machine.MachineException;
-import org.walkerljl.retry.exception.resouce.CannotDestroyResourceException;
-import org.walkerljl.retry.exception.resouce.CannotInitResourceException;
 import org.walkerljl.retry.impl.RetryJobHandlerRepository;
 import org.walkerljl.retry.impl.RetryJobLoader;
 import org.walkerljl.retry.impl.defaults.DefaultRemoteRetryJobQueue;
@@ -50,17 +32,25 @@ import org.walkerljl.retry.model.RetryParam;
 import org.walkerljl.retry.model.enums.RetryJobStatusEnum;
 import org.walkerljl.retry.model.enums.RetryParamStatusEnum;
 import org.walkerljl.retry.model.enums.RetryPriorityEnum;
+import org.walkerljl.retry.standard.machine.exception.CannotStartMachineException;
+import org.walkerljl.retry.standard.resource.exception.CannotInitResourceException;
 import org.walkerljl.toolkit.db.ds.DataSourceFactory;
 import org.walkerljl.toolkit.db.ds.impl.dbcp.DbcpDataSourceFactory;
 import org.walkerljl.toolkit.db.orm.enums.DatabaseType;
 import org.walkerljl.toolkit.db.orm.session.Configuration;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.*;
 
 /**
  * RetryServer
  *
  * @author xingxun
  */
-public class DefaultRetryServer implements RetryServer {
+public class DefaultRetryServer extends AbstractRetryServer implements RetryServer {
 
     private Logger                   logger;
     private RetryConfig              retryConfig;
@@ -75,12 +65,10 @@ public class DefaultRetryServer implements RetryServer {
     private ScheduledExecutorService retryWaiterScheduler;
 
     @Override
-    public String getInstanceId() {
-        return null;
-    }
+    public void processInit() throws CannotInitResourceException {
 
-    @Override
-    public void init() throws CannotInitResourceException {
+        super.processInit();
+
         LoggerRepository loggerRepository = new DefaultLoggerRepository();
         LoggerFactory.bindLoggerRepository(loggerRepository);
 
@@ -112,13 +100,11 @@ public class DefaultRetryServer implements RetryServer {
         RetryJobHandlerRepository.register(SyncUserInfoRetryHandler.class.getSimpleName(), new SyncUserInfoRetryHandler());
 
         retryJobDispatcher = new DefaultRetryJobDispatcher(retryConfig, retryService);
+        retryJobDispatcher.start();
         retryJobLoader = new DefaultRetryJobLoader(retryConfig, retryService);
+        retryJobLoader.start();
         retryBroker = new DefaultRetryBroker(retryJobDAO, retryParamDAO);
-    }
-
-    @Override
-    public void destroy() throws CannotDestroyResourceException {
-
+        retryBroker.start();
     }
 
     @Override
@@ -126,30 +112,20 @@ public class DefaultRetryServer implements RetryServer {
         return "01";
     }
 
-    @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public String getGroup() {
-        return "retry";
-    }
-
     private RetryJob buildRetryJob() {
 
         RetryJob retryJob = new RetryJob();
+
         retryJob.setBizType("hello");
         retryJob.setBizId(UUID.randomUUID().toString());
         retryJob.setPriority(RetryPriorityEnum.LOW);
-        retryJob.setTargetIdentifer(SyncUserInfoRetryHandler.class.getSimpleName());
+        retryJob.setTargetIdentifier(SyncUserInfoRetryHandler.class.getSimpleName());
         retryJob.setRetryRule("2,1");
         retryJob.setAttempts(0);
         retryJob.setMaxAttempts(10);
         retryJob.setStatus(RetryJobStatusEnum.UNPROCESS);
         retryJob.setLastRetryTime(new Date());
         Date nextRetryTime = RetryIntervalCalculator.calculateNextRetryTime(
-                retryJob.getLastRetryTime(),
                 retryJob.getRetryRule(),
                 retryJob.getAttempts()
         );
@@ -189,7 +165,10 @@ public class DefaultRetryServer implements RetryServer {
     }
 
     @Override
-    public void start() throws CannotStartMachineException {
+    public void processStart() throws CannotStartMachineException {
+
+        super.processStart();
+
         //RetryJobFetcher
         retryJobFetcherScheduler = Executors.newSingleThreadScheduledExecutor();
         retryJobFetcherScheduler.scheduleAtFixedRate(new Runnable() {
@@ -229,50 +208,4 @@ public class DefaultRetryServer implements RetryServer {
         }, 1, 60, TimeUnit.SECONDS);
     }
 
-    @Override
-    public void callbackOnSuccessToStart() throws MachineException {
-
-    }
-
-    @Override
-    public void run() throws MachineException {
-
-    }
-
-    @Override
-    public void callbackOnFailureToStart() throws MachineException {
-
-    }
-
-    @Override
-    public void stop() throws CannotStopMachineException {
-
-        if (!retryJobLoaderScheduler.isShutdown()) {
-            retryJobLoaderScheduler.shutdown();
-        }
-        if (!retryJobFetcherScheduler.isShutdown()) {
-            retryJobFetcherScheduler.shutdown();
-        }
-
-    }
-
-    @Override
-    public void callbackOnSuccessToStop() throws MachineException {
-
-    }
-
-    @Override
-    public void callbackOnFailureToStop() throws MachineException {
-
-    }
-
-    @Override
-    public void restart() throws CannotStartMachineException, CannotStopMachineException {
-
-    }
-
-    @Override
-    public boolean isRunning() {
-        return false;
-    }
 }

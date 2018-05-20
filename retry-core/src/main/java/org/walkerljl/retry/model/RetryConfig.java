@@ -1,10 +1,5 @@
 package org.walkerljl.retry.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import org.walkerljl.retry.alarm.impl.LoggerAlarmRetryListener;
 import org.walkerljl.retry.impl.executor.RetryJobExecutorConfig;
 import org.walkerljl.retry.impl.util.AssertUtil;
@@ -12,6 +7,11 @@ import org.walkerljl.retry.listener.RetryListener;
 import org.walkerljl.retry.listener.impl.RetryJobExecutorListener;
 import org.walkerljl.retry.stats.RetryStatisticsListener;
 import org.walkerljl.retry.stats.impl.DefaultRetryStatisticsRepository;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 重试配置
@@ -33,21 +33,36 @@ public class RetryConfig extends BaseEntity {
     /** 任务重试超时时间，单位：秒*/
     private long jobRetryTimeout        = 300;
 
+    /** 重试任务执行器配置Map*/
     private Map<String, RetryJobExecutorConfig> retryJobExecutorConfigMap;
 
+    /** 监听器列表*/
     private List<RetryListener> listeners = new ArrayList<RetryListener>(3);
 
+    /**
+     * 构造函数
+     */
     public RetryConfig() {
         registerListener(new RetryJobExecutorListener());
         registerListener(new RetryStatisticsListener(new DefaultRetryStatisticsRepository()));
         registerListener(new LoggerAlarmRetryListener());
     }
 
+    /**
+     * 注册监听器
+     *
+     * @param retryListener  监听器
+     */
     public void registerListener(RetryListener retryListener) {
         AssertUtil.assertTrue(retryListener != null, "Retry listener can not be null.");
         listeners.add(retryListener);
     }
 
+    /**
+     * 列出所有监听器
+     *
+     * @return
+     */
     public List<RetryListener> listListeners() {
         return Collections.unmodifiableList(listeners);
     }

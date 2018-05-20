@@ -9,9 +9,9 @@ package org.walkerljl.retry.exception;
 public enum RetryErrorCode implements ErrorCode {
 
     /**
-     * 未知异常
+     * 网络繁忙，请稍后再试
      */
-    UNKNOWN("unknown", "网络繁忙，轻稍后再试。"),
+    UNKNOWN("unknown", "网络繁忙，请稍后再试"),
 
     /**
      * 无效的参数

@@ -1,6 +1,7 @@
 package org.walkerljl.retry.demo.defaults;
 
 import org.walkerljl.retry.RetryBroker;
+import org.walkerljl.retry.abstracts.AbstractRetryBroker;
 import org.walkerljl.retry.db.dao.ModelAndDOConverter;
 import org.walkerljl.retry.db.dao.daointerface.RetryJobDAO;
 import org.walkerljl.retry.db.dao.daointerface.RetryParamDAO;
@@ -14,7 +15,7 @@ import org.walkerljl.retry.model.RetryParam;
  *
  * @author xingxun
  */
-public class DefaultRetryBroker implements RetryBroker {
+public class DefaultRetryBroker extends AbstractRetryBroker implements RetryBroker {
 
     private RetryJobDAO   retryJobDAO;
     private RetryParamDAO retryParamDAO;
@@ -25,7 +26,8 @@ public class DefaultRetryBroker implements RetryBroker {
     }
 
     @Override
-    public String submit(RetryJob retryJob) {
+    public String processSubmit(RetryJob retryJob) {
+
         if (CollectionUtil.isEmpty(retryJob.getParams())) {
             RetryJobDO retryJobDO = ModelAndDOConverter.toRetryJobDO(retryJob);
             if (retryJobDO == null) {
@@ -51,7 +53,8 @@ public class DefaultRetryBroker implements RetryBroker {
     }
 
     @Override
-    public void markRetryJobToCompleted(String retryJobId) {
+    public void processMarkRetryJobToCompleted(String retryJobId) {
+
         retryJobDAO.markToCompleted(Long.valueOf(retryJobId));
     }
 }

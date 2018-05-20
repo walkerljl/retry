@@ -1,28 +1,28 @@
 package org.walkerljl.retry.standard;
 
 /**
- * Describe one kind of object which has id,name and group
+ * 描述一个具有ID、名称、分组标识符的对象
  *
  * @author: xingxun
  */
 public interface Identifer {
 
     /**
-     * Get id
+     * 获取ID
      *
      * @return
      */
     String getId();
 
     /**
-     * Get name
+     * 获取名称
      *
      * @return
      */
     String getName();
 
     /**
-     * Get groud
+     * 获取分组
      *
      * @return
      */

@@ -1,8 +1,8 @@
 package org.walkerljl.retry.demo;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.walkerljl.retry.RetryServer;
+
+import java.util.concurrent.CountDownLatch;
 
 /**
  * RetryBootstrap
@@ -16,8 +16,9 @@ public class RetryBootstrap {
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
         RetryServer retryServer = new DefaultRetryServer();
-        retryServer.init();
         retryServer.start();
+
+        retryServer.restart();
 
         countDownLatch.await();
     }

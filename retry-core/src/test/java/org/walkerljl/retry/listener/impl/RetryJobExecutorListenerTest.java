@@ -7,15 +7,16 @@ import org.walkerljl.retry.listener.RetryListener;
 import org.walkerljl.retry.model.RetryJob;
 
 /**
+ * RetryJobExecutorListenerTest
  *
  * @author xingxun
  */
 public class RetryJobExecutorListenerTest extends BaseUnitTest {
 
-    private RetryListener retryListener = new RetryJobExecutorListener();
-
     @Test
     public void onRunning() {
+
+        RetryListener retryListener = new RetryJobExecutorListener();
 
         RetryContext retryContext = new RetryContext();
         RetryJob retryJob = new RetryJob();
@@ -28,6 +29,8 @@ public class RetryJobExecutorListenerTest extends BaseUnitTest {
     @Test
     public void onCompleted() {
 
+        RetryListener retryListener = new RetryJobExecutorListener();
+
         RetryContext retryContext = new RetryContext();
         RetryJob retryJob = new RetryJob();
 
@@ -39,6 +42,8 @@ public class RetryJobExecutorListenerTest extends BaseUnitTest {
     @Test
     public void onError() {
 
+        RetryListener retryListener = new RetryJobExecutorListener();
+
         RetryContext retryContext = new RetryContext();
         RetryJob retryJob = new RetryJob();
 
@@ -49,6 +54,8 @@ public class RetryJobExecutorListenerTest extends BaseUnitTest {
 
     @Test
     public void onAbort() {
+
+        RetryListener retryListener = new RetryJobExecutorListener();
 
         RetryContext retryContext = new RetryContext();
         RetryJob retryJob = new RetryJob();
