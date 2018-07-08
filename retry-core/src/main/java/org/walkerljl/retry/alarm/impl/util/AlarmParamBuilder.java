@@ -3,6 +3,7 @@ package org.walkerljl.retry.alarm.impl.util;
 import org.walkerljl.retry.alarm.AlarmInfo;
 import org.walkerljl.retry.impl.RetryContext;
 import org.walkerljl.retry.impl.util.RetryUtil;
+import org.walkerljl.retry.impl.util.ThrowableUtil;
 import org.walkerljl.retry.model.RetryJob;
 
 /**
@@ -28,7 +29,7 @@ public class AlarmParamBuilder {
         }
         String retryJobIdentifier = RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId());
         Throwable e = (Throwable) retryContext.getAttribute(RetryContext.RETRY_THROABLE);
-        AlarmInfo alarmInfo = new AlarmInfo(retryJobIdentifier, (e == null ? "" : e.getMessage()));
+        AlarmInfo alarmInfo = new AlarmInfo(retryJobIdentifier, ThrowableUtil.getMessage(e));
 
         return alarmInfo;
     }

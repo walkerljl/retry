@@ -1,5 +1,10 @@
 package org.walkerljl.retry.impl.util;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.walkerljl.retry.BaseUnitTest;
@@ -14,11 +19,6 @@ import org.walkerljl.retry.model.enums.RetryParamStatusEnum;
 import org.walkerljl.retry.model.enums.RetryPriorityEnum;
 import org.walkerljl.retry.model.param.LockRetryJobParam;
 import org.walkerljl.retry.model.param.UnlockRetryJobParam;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 /**
  * RetryObjectBuilderTest
@@ -107,7 +107,8 @@ public class RetryObjectBuilderTest  extends BaseUnitTest {
         Assert.assertEquals(actual.getStatus(), RetryJobStatusEnum.PROCESSED);
         Date expectedNextRetryTime = RetryIntervalCalculator.calculateNextRetryTime(
                 retryJob.getRetryRule(), retryJob.getAttempts() + 1);
-        Assert.assertEquals(actual.getNextRetryTime(), expectedNextRetryTime);
+        Assert.assertEquals(DateUtil.dateFormat(actual.getNextRetryTime(), DateUtil.DATE_FOPRMAT_SECONDS),
+                DateUtil.dateFormat(expectedNextRetryTime, DateUtil.DATE_FOPRMAT_SECONDS));
 
         actual = RetryObjectBuilder.buildUnlockRetryJobParam(retryJob, false);
         Assert.assertEquals(actual.getRetryJobId(), retryJob.getId());

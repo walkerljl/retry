@@ -1,11 +1,12 @@
 package org.walkerljl.retry.standard.resource.abstracts;
 
+import org.walkerljl.retry.impl.log.logger.LoggerFactory;
+import org.walkerljl.retry.impl.log.logger.LoggerNames;
+import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.standard.resource.Resource;
 import org.walkerljl.retry.standard.resource.ResourceRepository;
 import org.walkerljl.retry.standard.resource.exception.CannotDestroyResourceException;
 import org.walkerljl.retry.standard.resource.exception.CannotInitResourceException;
-import org.walkerljl.toolkit.logging.Logger;
-import org.walkerljl.toolkit.logging.LoggerFactory;
 
 /**
  * 抽象的资源
@@ -15,7 +16,7 @@ import org.walkerljl.toolkit.logging.LoggerFactory;
  */
 public abstract class AbstractResource implements Resource {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(AbstractResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggerNames.RETRY);
 
     /** 是否初始化标志*/
     private volatile boolean inited = false;
@@ -53,11 +54,13 @@ public abstract class AbstractResource implements Resource {
             }
             if (!inited) {
                 synchronized (this) {
-                    processInit();
-                    ResourceRepository.register(getGroup(), getId(), this);
-                    inited = true;
-                    if (LOGGER.isInfoEnabled()) {
-                        LOGGER.info(String.format("%s has inited,consume %s milliseconds.", getServerName(), (System.currentTimeMillis() - startTime)));
+                    if (!inited) {
+                        processInit();
+                        ResourceRepository.register(getGroup(), getId(), this);
+                        inited = true;
+                        if (LOGGER.isInfoEnabled()) {
+                            LOGGER.info(String.format("%s has inited,consume %s milliseconds.", getServerName(), (System.currentTimeMillis() - startTime)));
+                        }
                     }
                 }
             }
@@ -74,12 +77,17 @@ public abstract class AbstractResource implements Resource {
             if (LOGGER.isInfoEnabled()) {
                 LOGGER.info(String.format("%s is destroying.", getServerName()));
             }
-            synchronized (this) {
-                processDestroy();
-                ResourceRepository.unregister(getGroup(), getId());
-                inited = false;
-                if (LOGGER.isInfoEnabled()) {
-                    LOGGER.info(String.format("%s has destroied,consume %s milliseconds.", getServerName(), (System.currentTimeMillis() - startTime)));
+            if (inited) {
+                synchronized (this) {
+                    if (inited) {
+                        processDestroy();
+                        ResourceRepository.unregister(getGroup(), getId());
+                        inited = false;
+                        if (LOGGER.isInfoEnabled()) {
+                            LOGGER.info(String.format("%s has destroied,consume %s milliseconds.", getServerName(),
+                                    (System.currentTimeMillis() - startTime)));
+                        }
+                    }
                 }
             }
         } catch (Throwable e) {

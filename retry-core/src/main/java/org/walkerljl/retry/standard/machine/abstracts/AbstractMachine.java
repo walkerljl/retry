@@ -1,5 +1,8 @@
 package org.walkerljl.retry.standard.machine.abstracts;
 
+import org.walkerljl.retry.impl.log.logger.LoggerFactory;
+import org.walkerljl.retry.impl.log.logger.LoggerNames;
+import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.standard.machine.Machine;
 import org.walkerljl.retry.standard.machine.MachineRepository;
 import org.walkerljl.retry.standard.machine.exception.CannotStartMachineException;
@@ -8,8 +11,6 @@ import org.walkerljl.retry.standard.machine.exception.MachineException;
 import org.walkerljl.retry.standard.resource.abstracts.AbstractResource;
 import org.walkerljl.retry.standard.resource.exception.CannotDestroyResourceException;
 import org.walkerljl.retry.standard.resource.exception.CannotInitResourceException;
-import org.walkerljl.toolkit.logging.Logger;
-import org.walkerljl.toolkit.logging.LoggerFactory;
 
 
 /**
@@ -20,7 +21,7 @@ import org.walkerljl.toolkit.logging.LoggerFactory;
  */
 public abstract class AbstractMachine extends AbstractResource implements Machine {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(AbstractMachine.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggerNames.RETRY);
 
     /** 是否初始化标志*/
     private volatile boolean running = false;

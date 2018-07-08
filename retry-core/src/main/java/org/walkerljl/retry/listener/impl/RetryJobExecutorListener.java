@@ -1,11 +1,11 @@
 package org.walkerljl.retry.listener.impl;
 
 import org.walkerljl.retry.impl.RetryContext;
+import org.walkerljl.retry.impl.log.invocation.InvocationInfo;
 import org.walkerljl.retry.impl.log.logger.LoggerFactory;
 import org.walkerljl.retry.impl.log.logger.LoggerNames;
-import org.walkerljl.retry.impl.log.util.LoggerUtil;
-import org.walkerljl.retry.impl.util.JSONUtil;
-import org.walkerljl.retry.impl.util.RetryUtil;
+import org.walkerljl.retry.impl.log.util.LoggerDetailUtil;
+import org.walkerljl.retry.impl.log.util.LoggerDigestUtil;
 import org.walkerljl.retry.listener.RetryListener;
 import org.walkerljl.retry.logger.Logger;
 import org.walkerljl.retry.model.RetryJob;
@@ -41,46 +41,6 @@ public class RetryJobExecutorListener implements RetryListener {
     }
 
     /**
-     * buildDigestLogContent
-     *
-     * @param keyWord
-     * @param retryJob
-     * @return
-     */
-    private String buildDigestLogContent(String keyWord, RetryJob retryJob) {
-        if (retryJob == null) {
-            return null;
-        }
-        String digestLogContent = String.format("[%s]%s", keyWord, RetryUtil.buildIdentifier(retryJob.getBizType(), retryJob.getBizId()));
-        return digestLogContent;
-    }
-
-    /**
-     * buildDetailLogContent
-     *
-     * @param keyWord
-     * @param retryContext
-     * @param retryJob
-     * @return
-     */
-    private String buildDetailLogContent(String keyWord, RetryContext retryContext, RetryJob retryJob) {
-        if (retryContext == null) {
-            return null;
-        }
-        if (retryJob == null) {
-            return null;
-        }
-        Throwable e = (Throwable)retryContext.getAttribute(RetryContext.RETRY_THROABLE);
-        String detailLogContent = String.format("[%s](%s)(%s)(throable:%s)",
-                keyWord,
-                JSONUtil.toJSONString(retryJob),
-                JSONUtil.toJSONString(retryContext),
-                (e == null ? "" : e.getMessage())
-                );
-        return detailLogContent;
-    }
-
-    /**
      * doLog
      *
      * @param keyWord
@@ -88,13 +48,9 @@ public class RetryJobExecutorListener implements RetryListener {
      * @param retryJob
      */
     private void doLog(String keyWord, RetryContext retryContext, RetryJob retryJob) {
-        if (DIGEST_LOGGER.isInfoEnabled()) {
-            String digestLogContent = buildDigestLogContent(keyWord, retryJob);
-            LoggerUtil.info(DIGEST_LOGGER, digestLogContent);
-        }
-        if (DETAIL_LOGGER.isInfoEnabled()) {
-            String detailLogContent = buildDetailLogContent(keyWord, retryContext, retryJob);
-            LoggerUtil.info(DETAIL_LOGGER, detailLogContent);
-        }
+        InvocationInfo<RetryJob, RetryContext> invocationInfo = new InvocationInfo<>(getClass(), keyWord, retryJob);
+        invocationInfo.markSuccess(retryContext);
+        LoggerDigestUtil.logDigest(invocationInfo, DIGEST_LOGGER);
+        LoggerDetailUtil.logDetail(invocationInfo, DETAIL_LOGGER);
     }
 }

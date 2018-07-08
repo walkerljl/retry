@@ -1,13 +1,13 @@
 package org.walkerljl.retry.impl.executor;
 
-import org.walkerljl.retry.impl.RetryContext;
-import org.walkerljl.retry.impl.executor.impl.DefaultRetryJobExecutor;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.walkerljl.retry.impl.RetryContext;
+import org.walkerljl.retry.impl.executor.impl.DefaultRetryJobExecutor;
 
 /**
  * 重试任务执行器仓库
@@ -53,12 +53,13 @@ public class RetryJobExecutorRepository {
                 readLock.unlock();
                 writeLock.lock();
                 try {
+                    retryJobExecutor = REPOSITROY.get(executorId);
                     if (retryJobExecutor == null) {
                         RetryJobExecutorConfig retryJobExecutorConfig = (RetryJobExecutorConfig)
                                 retryContext.getAttribute(RetryContext.EXECUTOR_CONFIG);
                         retryJobExecutor = new DefaultRetryJobExecutor(retryJobExecutorConfig);
-                        retryJobExecutor.start();
                         if (retryJobExecutor != null) {
+                            retryJobExecutor.start();
                             REPOSITROY.put(executorId, retryJobExecutor);
                         }
                     }

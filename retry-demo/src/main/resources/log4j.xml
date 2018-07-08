@@ -135,6 +135,29 @@
     </appender>
     <!-- RETRY-JOB-EXECUTOR APPENDER end-->
 
+    <!-- RETRY-DB APPENDER begin-->
+    <appender name="RETRY-DB-DIGEST-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-db-digest.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <appender name="RETRY-DB-DETAIL-APPENDER"
+              class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/retry/retry-db.log"/>
+        <param name="append" value="true"/>
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d %-5p %c{2} - %m%n"/>
+        </layout>
+    </appender>
+    <!-- RETRY-DB APPENDER end-->
+
     <!-- RETRY APPENDER begin-->
     <appender name="RETRY-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
@@ -239,6 +262,17 @@
     <logger name="RETRY_JOB_EXECUTOR_DETAIL" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="RETRY-JOB-EXECUTOR-DETAIL-APPENDER"/>
+    </logger>
+    <!-- RetryJobExecutor LOGGER end-->
+
+    <!-- Retry DB LOGGER begin-->
+    <logger name="RETRY_DB_DIGEST" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="RETRY-DB-DIGEST-APPENDER"/>
+    </logger>
+    <logger name="RETRY_DB_DETAIL" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="RETRY-DB-DETAIL-APPENDER"/>
     </logger>
     <!-- RetryJobExecutor LOGGER end-->
 

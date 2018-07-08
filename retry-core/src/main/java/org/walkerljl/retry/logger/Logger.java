@@ -1,6 +1,8 @@
 package org.walkerljl.retry.logger;
 
 /**
+ * Logger
+ *
  * @author xingxun
  */
 public interface Logger {

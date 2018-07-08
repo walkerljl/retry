@@ -47,32 +47,35 @@ public abstract class AbstractRetryBroker extends AbstractMachine implements Ret
 
     @Override
     public String submit(RetryJob retryJob) {
+
         InvocationInfo<Object[], String> invocationInfo = new InvocationInfo<>(getClass(),
                 "submit", new Object[]{retryJob, isRunning()});
+        String retryJobId = null;
         try {
-            if (isRunning()) {
-                return processSubmit(retryJob);
+            if (retryJob != null && isRunning()) {
+                retryJobId = processSubmit(retryJob);
             }
+            invocationInfo.markSuccess(retryJobId);
         } catch (Throwable e) {
             invocationInfo.markFailure(e);
         } finally {
             LoggerDigestUtil.logDigest(invocationInfo, DIGEST_LOGGER);
             LoggerDetailUtil.logDetail(invocationInfo, DETAIL_LOGGER);
         }
-        return null;
+        return retryJobId;
     }
 
     @Override
     public void markRetryJobToCompleted(String retryJobId) {
+
         InvocationInfo<Object[], String> invocationInfo = new InvocationInfo<>(getClass(),
                 "markRetryJobToCompleted", new Object[]{retryJobId, isRunning()});
         try {
-            if (StringUtil.isEmpty(retryJobId)) {
-                return;
-            }
-            if (isRunning()) {
+            if (StringUtil.isNotEmpty(retryJobId)
+                    && isRunning()) {
                 processMarkRetryJobToCompleted(retryJobId);
             }
+            invocationInfo.markSuccess();
         } catch (Throwable e) {
             invocationInfo.markFailure(e);
         } finally {

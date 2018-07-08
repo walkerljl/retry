@@ -17,7 +17,6 @@ public class RetryConstants {
     public static final String COMPONENT_IDENTIFIER_RETRY_BROKER   = "RetryBroker";
     /** 组件标识符：重试服务器*/
     public static final String COMPONENT_IDENTIFIER_RETRY_SERVER   = "RetryServer";
-
     /** 默认的组件ID：重试Broker*/
     public static final String DEFAULT_COMPONENT_ID_RETRY_BROKER   = "default";
     /** 默认的组件ID：重试服务器*/

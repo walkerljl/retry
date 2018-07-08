@@ -1,5 +1,9 @@
 package org.walkerljl.retry.impl.util;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.walkerljl.retry.RemoteRetryJobQueue;
 import org.walkerljl.retry.RetryService;
 import org.walkerljl.retry.impl.RetryConstants;
@@ -9,10 +13,6 @@ import org.walkerljl.retry.listener.RetryListener;
 import org.walkerljl.retry.model.RetryConfig;
 import org.walkerljl.retry.model.RetryJob;
 import org.walkerljl.retry.model.enums.RetryJobStatusEnum;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Retry util
@@ -135,8 +135,15 @@ public class RetryUtil {
      * @return
      */
     public static RetryJobExecutorConfig getExectuorConfig(RetryConfig retryConfig, RetryJob retryJob) {
-        Map<String, RetryJobExecutorConfig> exectuorConfig = retryConfig == null ? null : retryConfig.getRetryJobExecutorConfigMap();
-        return retryJob == null ? new RetryJobExecutorConfig() :
+        if (retryJob == null) {
+            return null;
+        }
+        if (retryJob.getStatus() == null) {
+            return null;
+        }
+        Map<String, RetryJobExecutorConfig> exectuorConfig =
+                retryConfig == null ? null : retryConfig.getRetryJobExecutorConfigMap();
+        return exectuorConfig == null ? new RetryJobExecutorConfig() :
                 exectuorConfig.get(retryJob.getStatus().getCode());
     }
 

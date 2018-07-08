@@ -40,20 +40,28 @@ public class DefaultRetryJobDispatcher extends AbstractMachine implements RetryJ
 
     @Override
     public void dispatch(RetryJob retryJob) {
-        InvocationInfo<RetryJob, Void> invocationInfo = new InvocationInfo<>(getClass(), "dispatch", retryJob);
+        if (!isRunning()) {
+            return;
+        }
+        InvocationInfo<Object[], RetryJobExecutor> invocationInfo = new InvocationInfo<>(getClass(), "dispatch",
+                new Object[]{isRunning(), retryConfig, retryJob});
         try {
-            RetryContext retryContext = RetryUtil.buildRetryContext(retryConfig, retryJob);
-            RunnableRetryJob runnableRetryJob = new DefaultRunnableRetryJob(retryContext, retryJob, retryService);
+            RetryJobExecutor retryJobExecutor = null;
+            if (retryJob != null) {
+                RetryContext retryContext = RetryUtil.buildRetryContext(retryConfig, retryJob);
+                RunnableRetryJob runnableRetryJob = new DefaultRunnableRetryJob(retryContext, retryJob, retryService);
 
-            RetryJobExecutor retryJobExecutor = RetryJobExecutorRepository.getInstance().lookup(retryContext);
-            retryJobExecutor.execute(runnableRetryJob);
-
-            invocationInfo.markResult(true, retryJobExecutor, null);
+                retryJobExecutor = RetryJobExecutorRepository.getInstance().lookup(retryContext);
+                if (retryJobExecutor != null) {
+                    retryJobExecutor.execute(runnableRetryJob);
+                }
+            }
+            invocationInfo.markSuccess(retryJobExecutor);
         } catch (Exception e) {
             invocationInfo.markFailure(e);
         } finally {
-            LoggerDetailUtil.logDetail(invocationInfo, DETAIL_LOGGER);
             LoggerDigestUtil.logDigest(invocationInfo, DIGEST_LOGGER);
+            LoggerDetailUtil.logDetail(invocationInfo, DETAIL_LOGGER);
         }
     }
 

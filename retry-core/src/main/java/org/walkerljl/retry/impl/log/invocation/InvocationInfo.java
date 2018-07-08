@@ -1,6 +1,6 @@
 package org.walkerljl.retry.impl.log.invocation;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.walkerljl.retry.model.BaseEntity;
@@ -43,7 +43,7 @@ public class InvocationInfo<PARAM, RESULT> extends BaseEntity {
     /** trace id*/
     private String traceId;
     /** 参数Map*/
-    private Map<String, Object> parametersMap = new HashMap<String, Object>(0);
+    private Map<String, Object> parametersMap = new LinkedHashMap<>(0);
 
     /**
      * 构造函数

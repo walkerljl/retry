@@ -15,7 +15,7 @@ public class RetryParam extends BaseEntity {
     private static final long serialVersionUID = -8640391014168493273L;
 
     /** ID*/
-    private String id;
+    private String               id;
     /** 重试任务ID*/
     private String               retryJobId;
     /** 参数值*/

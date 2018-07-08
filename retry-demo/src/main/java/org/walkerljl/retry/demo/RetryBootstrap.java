@@ -1,8 +1,9 @@
 package org.walkerljl.retry.demo;
 
-import org.walkerljl.retry.RetryServer;
-
 import java.util.concurrent.CountDownLatch;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * RetryBootstrap
@@ -15,10 +16,7 @@ public class RetryBootstrap {
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        RetryServer retryServer = new DefaultRetryServer();
-        retryServer.start();
-
-        retryServer.restart();
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring.xml");
 
         countDownLatch.await();
     }

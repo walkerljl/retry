@@ -9,7 +9,6 @@ import org.walkerljl.retry.impl.log.logger.LoggerFactory;
 import org.walkerljl.retry.impl.log.logger.LoggerNames;
 import org.walkerljl.retry.impl.log.util.LoggerDetailUtil;
 import org.walkerljl.retry.impl.log.util.LoggerDigestUtil;
-import org.walkerljl.retry.impl.log.util.LoggerUtil;
 import org.walkerljl.retry.impl.util.ArrayUtil;
 import org.walkerljl.retry.impl.util.RetryUtil;
 import org.walkerljl.retry.logger.Logger;
@@ -25,7 +24,6 @@ import org.walkerljl.retry.standard.machine.exception.CannotStopMachineException
  */
 public class DefaultRetryJobLoader extends AbstractMachine implements RetryJobLoader {
 
-    private static final Logger LOGGER         = LoggerFactory.getLogger(DefaultRetryJobLoader.class);
     private static final Logger DIGEST_LOGGER  = LoggerFactory.getLogger(LoggerNames.RETRY_JOB_LOADER_DIGEST);
     private static final Logger DETAIL_LOGGER  = LoggerFactory.getLogger(LoggerNames.RETRY_JOB_LOADER_DETAIL);
 
@@ -40,56 +38,55 @@ public class DefaultRetryJobLoader extends AbstractMachine implements RetryJobLo
 
     @Override
     public void load(RemoteRetryJobQueue remoteRetryJobQueue) {
-        InvocationInfo<RemoteRetryJobQueue, Void> invocationInfo = new InvocationInfo<>(getClass(), "load", remoteRetryJobQueue);
+        InvocationInfo<Object[], Object> invocationInfo =
+                new InvocationInfo<>(getClass(), "load",
+                        new Object[]{isRunning(), retryConfig});
         try {
-            this.remoteRetryJobQueue = remoteRetryJobQueue;
-            int pageSize = retryConfig.getJobLoadPageSize();
-            if (pageSize > retryConfig.getMaxJobQuantityPerLoad()) {
-                pageSize = retryConfig.getMaxJobQuantityPerLoad();
+            int failureRetryJobCounter = 0;
+            int timeoutRetryJobCounter = 0;
+            int unprocessRetryJobCounter = 0;
+            if (remoteRetryJobQueue != null && isRunning()) {
+                this.remoteRetryJobQueue = remoteRetryJobQueue;
+                int pageSize = retryConfig.getJobLoadPageSize();
+                if (pageSize > retryConfig.getMaxJobQuantityPerLoad()) {
+                    pageSize = retryConfig.getMaxJobQuantityPerLoad();
+                }
+
+                //加载失败的重试任务
+                failureRetryJobCounter = RetryUtil.loadFailureRetryJobs(
+                        this.retryService,
+                        this.retryConfig,
+                        this.remoteRetryJobQueue,
+                        failureRetryJobCounter,
+                        retryConfig.getJobLoadBeginPageNumber(),
+                        pageSize);
+
+                //加载超时的重试任务
+                timeoutRetryJobCounter = RetryUtil.loadTimeoutRetryJobs(
+                        this.retryService,
+                        this.retryConfig,
+                        this.remoteRetryJobQueue,
+                        timeoutRetryJobCounter,
+                        retryConfig.getJobLoadBeginPageNumber(),
+                        pageSize);
+
+                //加载未处理的重试任务
+                unprocessRetryJobCounter = RetryUtil.loadUnprocessRetryJobs(
+                        this.retryService,
+                        this.retryConfig,
+                        this.remoteRetryJobQueue,
+                        unprocessRetryJobCounter,
+                        retryConfig.getJobLoadBeginPageNumber(),
+                        pageSize);
             }
 
-            //加载失败的重试任务
-            int failureRetryJobCounter = 0;
-            failureRetryJobCounter = RetryUtil.loadFailureRetryJobs(
-                    this.retryService,
-                    this.retryConfig,
-                    this.remoteRetryJobQueue,
-                    failureRetryJobCounter,
-                    retryConfig.getJobLoadBeginPageNumber(),
-                    pageSize);
-
-            //加载超时的重试任务
-            int timeoutRetryJobCounter = 0;
-            timeoutRetryJobCounter = RetryUtil.loadTimeoutRetryJobs(
-                    this.retryService,
-                    this.retryConfig,
-                    this.remoteRetryJobQueue,
-                    timeoutRetryJobCounter,
-                    retryConfig.getJobLoadBeginPageNumber(),
-                    pageSize);
-
-            //加载未处理的重试任务
-            int unprocessRetryJobCounter = 0;
-            unprocessRetryJobCounter = RetryUtil.loadUnprocessRetryJobs(
-                    this.retryService,
-                    this.retryConfig,
-                    this.remoteRetryJobQueue,
-                    unprocessRetryJobCounter,
-                    retryConfig.getJobLoadBeginPageNumber(),
-                    pageSize);
-
-            invocationInfo.markResult(true,
-                    ArrayUtil.concat(",", new Integer[] {failureRetryJobCounter, timeoutRetryJobCounter, unprocessRetryJobCounter}),
-                    null);
+            invocationInfo.markSuccess(
+                    ArrayUtil.concat(",", new Integer[] {failureRetryJobCounter, timeoutRetryJobCounter, unprocessRetryJobCounter}));
         } catch (Throwable e) {
             invocationInfo.markFailure(e);
         } finally {
-            try {
-                LoggerDigestUtil.logDigest(invocationInfo, DIGEST_LOGGER);
-                LoggerDetailUtil.logDetail(invocationInfo, DETAIL_LOGGER);
-            } catch (Throwable e) {
-                LoggerUtil.error(LOGGER, e);
-            }
+            LoggerDigestUtil.logDigest(invocationInfo, DIGEST_LOGGER);
+            LoggerDetailUtil.logDetail(invocationInfo, DETAIL_LOGGER);
         }
     }
 

@@ -1,6 +1,7 @@
 package org.walkerljl.retry.impl.log.util;
 
 import org.walkerljl.retry.impl.log.invocation.InvocationInfo;
+import org.walkerljl.retry.impl.util.JSONUtil;
 import org.walkerljl.retry.logger.Logger;
 
 /**
@@ -54,10 +55,10 @@ public class LoggerDetailUtil extends AbstractLogUtil {
         sb.append(getString(invocationInfo.isSuccess()));
         sb.append(LOG_PARAM_SUFFIX);
 
-        sb.append(LOG_PARAM_PREFIX).append(String.valueOf(invocationInfo.getParam()));
+        sb.append(LOG_PARAM_PREFIX).append(JSONUtil.toJSONString(invocationInfo.getParam()));
 
         sb.append(LOG_PARAM_SUFFIX).append(LOG_PARAM_PREFIX);
-        sb.append(null == invocationInfo.getDirectResultData() ? LOG_DEFAULT : invocationInfo.getDirectResultData()).append(
+        sb.append(null == invocationInfo.getDirectResultData() ? LOG_DEFAULT : JSONUtil.toJSONString(invocationInfo.getDirectResultData())).append(
                 LOG_PARAM_SUFFIX);
         //异常
         sb.append(LOG_PARAM_PREFIX).append(THROWABLE);
